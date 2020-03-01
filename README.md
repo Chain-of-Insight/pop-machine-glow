@@ -31,7 +31,7 @@ const new_puzzle_record : Puzzle =
   ]
 ```
 
-# See:
+## See:
 - LIGO Types: https://gitlab.com/ligolang/ligo/blob/dev/src/passes/operators/operators.ml#L35
 - Fi Types: https://learn.fi-code.com/overview/types
 
@@ -50,7 +50,12 @@ E.g. (TODO XXX: This part is vague / informal)
 
 # Why: 
 
+Now that we have our Zero Knowledge protocol for answer verification, it's time to have some fun with it!
 
+The first use case we have 
+
+## See:
+- Tezos NFT Standard https://nft.stove-labs.com/ (beta)
 
 <br/><br/><br/>
 <p align="center">
