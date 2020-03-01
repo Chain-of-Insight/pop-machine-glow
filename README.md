@@ -63,6 +63,7 @@ The first use case we have is rewarding players for finding correct answers. Thi
 
 ### See:
 - Tezos NFT Standard https://nft.stove-labs.com/ (beta proposal)
+- https://github.com/stove-labs/nft.stove-labs.com/blob/master/src/contracts/nft.ligo
 
 <br/><br/><br/>
 <p align="center">
