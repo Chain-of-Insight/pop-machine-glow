@@ -40,7 +40,7 @@ The Oracle contract is the main worker for handling storage from the puzzle's Au
 To encrypt the answers we'll store access to our primitives and cipher algorithms in a different smart contract, called the Hashing contract, which is callable without a gas payment. This allows an author to generate encrypted bytes data to send to storage in the Oracle contract without needing to `POST` that data over `HTTP`.
 
 
-<br/<br/><br/>
+<br/><br/><br/>
 <p align="center">
   <img width="250px" height="auto" src="https://raw.githubusercontent.com/Chain-of-Insight/pop-machine-glow/master/Documentation/assets/img/pop_machine.png">
 </p>
