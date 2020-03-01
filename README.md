@@ -14,7 +14,8 @@ type Puzzle is
     author  : address;  // Author address
     name    : string;   // Puzzle name (frontend display)
     domain  : string;   // Where to find the puzzle online
-    answers : bytes     // Encrypted bytes output of hasher contract
+    answers : bytes;    // Encrypted bytes output of hasher contract
+    rewards : int       // Max claimable rewards (default 0)
   ]
 ```
 
@@ -27,7 +28,8 @@ const new_puzzle_record : Puzzle =
     author  = authorAddress;
     name    = "Satoshi\'s Lost Faucet";
     domain  = "https://satoshislostfaucet.com";
-    answers = encryptedOutput
+    answers = encryptedOutput;
+    rewards = 3   // e.g. NFTs locked to First, Second and Third place claimants
   ]
 ```
 
@@ -52,10 +54,15 @@ E.g. (TODO XXX: This part is vague / informal)
 
 Now that we have our Zero Knowledge protocol for answer verification, it's time to have some fun with it!
 
-The first use case we have 
+The first use case we have is rewarding players for finding correct answers. This requires inheriting a third contract, we can call this the *Rewards contract* which contains code for minting NFTs according to the proposed Tezos NFT standards. 
+
+## Reward Rules
+- User must have a verified thier set of solutions as 100% correct
+  - We can accomplish this be giving correct solvers a self destructing mempool entry for their Tezos address. This gives them a time limit to claim an NFT prize after verifying their solutions.
+- User can only obtain an NFT if there's a claimable quanitity remaining in storage. If a reward is claimed the `rewards: int` property of the `Puzzle` record is decremented at time of mint / distribution. 
 
 ## See:
-- Tezos NFT Standard https://nft.stove-labs.com/ (beta)
+- Tezos NFT Standard https://nft.stove-labs.com/ (beta proposal)
 
 <br/><br/><br/>
 <p align="center">
