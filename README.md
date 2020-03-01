@@ -33,7 +33,7 @@ const new_puzzle_record : Puzzle =
   ]
 ```
 
-## See:
+### See:
 - LIGO Types: https://gitlab.com/ligolang/ligo/blob/dev/src/passes/operators/operators.ml#L35
 - Fi Types: https://learn.fi-code.com/overview/types
 
@@ -56,12 +56,12 @@ Now that we have our Zero Knowledge protocol for answer verification, it's time 
 
 The first use case we have is rewarding players for finding correct answers. This requires inheriting a third contract, we can call this the *Rewards contract* which contains code for minting NFTs according to the proposed Tezos NFT standards. 
 
-## Reward Rules
+### Reward Rules
 - User must have a verified thier set of solutions as 100% correct
   - We can accomplish this be giving correct solvers a self destructing mempool entry for their Tezos address. This gives them a time limit to claim an NFT prize after verifying their solutions.
 - User can only obtain an NFT if there's a claimable quanitity remaining in storage. If a reward is claimed the `rewards: int` property of the `Puzzle` record is decremented at time of mint / distribution. 
 
-## See:
+### See:
 - Tezos NFT Standard https://nft.stove-labs.com/ (beta proposal)
 
 <br/><br/><br/>
