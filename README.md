@@ -1,7 +1,7 @@
 # PoP Machine Glow
 
 <p align="center">
-  <img width="55%" height="auto" src="https://raw.githubusercontent.com/Chain-of-Insight/pop-machine-glow/master/Documentation/assets/img/pop_machine.png">
+  <img width="250px" height="auto" src="https://raw.githubusercontent.com/Chain-of-Insight/pop-machine-glow/master/Documentation/assets/img/pop_machine.png">
 </p>
 
 
