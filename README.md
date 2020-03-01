@@ -1,3 +1,5 @@
+## All your answers are ~~belong~~_unknown_ to us
+
 # PoP Machine Glow
 PoP Machine Glow (PoPMG) is a zero knowledge encryption oracle and DApp that provides users and puzzle authors with methods to obtain verifiable proof of test completion. PoPMG verifies your user knows an without itself holding a plain text version of the answer. 
 
@@ -12,7 +14,7 @@ type Puzzle is
     author  : address;  // Author address
     name    : string;   // Puzzle name (frontend display)
     domain  : string;   // Where to find the puzzle online
-    answers : bytes    // Encrypted bytes output of hasher contract
+    answers : bytes     // Encrypted bytes output of hasher contract
   ]
 ```
 
