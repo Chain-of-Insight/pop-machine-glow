@@ -47,9 +47,9 @@ To encrypt the answers we'll store access to our primitives and cipher operation
 To do this, the *Hashing contract* uses its public key for encryption operations. This key is visible to everyone, but that's also what enables all parties involved (Author, Oracle and Player) to each call the contract independently and produce a reliable encrypted or decrypted result without needing to `POST` the answers of `HTTP`.
 
 E.g. (TODO XXX: This part is vague / informal)
-1) Puzzle author (Client): Hasher_Key + Answers => Encrypted Bytes (Oracle Storage)
-2) User encrypts (Client): (User_key + Hasher_key) + Answers => Encrypted Bytes (Comparison hash)
-3) Oracle decrypts (Oracle): Decrypt bytes using User_key + Public_Key (must be private local variable) and re-encrypt that output using Hasher_key + Decrypted => Encrypted Bytes - if this output matches the puzzle ID's storage value in `answers` return true, else return false / throw;
+1) Puzzle author (Client): `Hasher_Key + Answers => Encrypted Bytes` (Oracle Storage)
+2) User encrypts (Client): `(User_key + Hasher_key) + Answers => Encrypted Bytes` (Comparison hash)
+3) Oracle decrypts (Oracle): Decrypt bytes using User_key + Public_Key (must be private local variable) and re-encrypt that output using `Hasher_key + Decrypted => Encrypted Bytes` - if this output matches the puzzle ID's storage value in `answers` `return true`, else `return false` / `throw`;
 
 # Why: 
 
