@@ -42,7 +42,7 @@ To encrypt the answers we'll store access to our primitives and cipher algorithm
 
 
 
-<p align="center">
+<p align="center" style="margin-top:2.5rem;">
   <img width="250px" height="auto" src="https://raw.githubusercontent.com/Chain-of-Insight/pop-machine-glow/master/Documentation/assets/img/pop_machine.png">
 </p>
 
