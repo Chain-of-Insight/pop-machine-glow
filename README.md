@@ -11,13 +11,14 @@ Example (Ligo / Pascal)
 ```
 type Puzzle is
   record [
-    id      : string;   // e.g. Creation Time + User Address
-    author  : address;  // Author address
-    name    : string;   // Puzzle name (frontend display)
-    domain  : string;   // Where to find the puzzle online
-    answers : bytes;    // Encrypted bytes output of hasher contract
-    rewards : int       // Max claimable rewards (default 0)
-                        // Suggested max rewards capacity: testnet (10), mainnet (100)
+    id      	: string;   	// e.g. Creation Time + User Address
+    author  	: address;  	// Author address
+    name    	: string;   	// Puzzle name (frontend display)
+    domain  	: string;   	// Where to find the puzzle online
+    public_h 	: bytes;   	// Encrypted bytes output of hashing contract (public)
+    rewards_h 	: bytes;	// Encrypted bytes output of hashing contract (rewards)
+    rewards 	: int       	// Max claimable rewards (default 0)
+                        	// Suggested max rewards capacity: testnet (10), mainnet (100)
   ]
 ```
 
@@ -26,11 +27,12 @@ Example 2 - creating a new puzzle record:
 ```
 const new_puzzle_record : Puzzle =
   record [
-    id      = "1583093350498-tz1UAtabHR2whB3PWAuEQcKiHzkbHsPzcmHH";
-    author  = authorAddress;
-    name    = "Satoshi\'s Lost Faucet";
-    domain  = "https://satoshislostfaucet.com";
-    answers = encryptedOutput;
+    id      	= "1583093350498-tz1UAtabHR2whB3PWAuEQcKiHzkbHsPzcmHH";
+    author  	= authorAddress;
+    name    	= "Satoshi\'s Lost Faucet";
+    domain  	= "https://satoshislostfaucet.com";
+    public_h 	= encryptedOutput;
+    rewards_h	= operationOutput;
     rewards = 3   // e.g. NFTs locked to First, Second and Third place claimants
   ]
 ```
