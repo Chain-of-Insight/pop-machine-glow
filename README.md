@@ -79,7 +79,7 @@ Now that we have our Zero Knowledge protocol for answer verification, we get to 
 6) Surplus XTZ remaining in the Hashing Contract after NFTs are transferred to the winner can be sent to COI as payment of service operation. Transfer COI earnings out of the contract and into COI custody can be conducted either manually or automatically.
 7) A user can always withdraw their funds back to their wallet before calling the Hashing contract with `processPayment = true`, or if calling the contract with `processPayment = true` fails. If there's a race to claim the final NFT reward, the losing party won't end up with their funds stuck in the contract irretrievably. 
 
-The above works because the Hashing Contract processes the transaction on the user's behalf. This ensures the user's answers were used to create the target hash and that the hash—since it's public knowledge—wasn't created arbitrarily.
+**The above works because the Hashing Contract processes the transaction on the user's behalf. This ensures the user's answers were used to create the target hash and that the hash—since it's public knowledge—wasn't created arbitrarily.**
 
 <br/><br/><br/>
 <p align="center">
