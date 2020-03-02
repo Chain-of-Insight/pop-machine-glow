@@ -70,14 +70,15 @@ Now that we have our Zero Knowledge protocol for answer verification, we get to 
 ## Verification
 1) Users submit their answers to the DApp which calls the Hashing contract to test. Can proceed to next step if solutions are correct and output hash matches the Oracle contract storage (Client)
 2) User pre-pays a defined amount to the Hashing contract (Hashing Contract)
-  - Now the Hashing Contract can make a transaction on their behalf 
-  - This avoids requiring the user to submit their answers as a publicly viewable transaction
-  - Account balances need to be namespaced by calling user (address)
+	- Now the Hashing Contract can make a transaction on their behalf 
+	- This avoids requiring the user to submit their answers as a publicly viewable transaction
+	- Account balances need to be namespaced by calling user (address)
 3) User calls the Hashing contract verifier again with an extra argument: `processPayment = true` (Hashing Contract)
+	- For security's sake we'll have the user sign a message in this step if we're processing a payment
 4) Hashing contract verifies the result again and checks if tokens can be minted and transferred to the user. (Hashing Contract)
 5) If correct result and reward tokens are available, uses the pre-paid gas payment to mint the user a token and transfer it to their wallet and the amount of tokens available in the Oracle contract is decremented (Hashing Contract / NFT Contract / Oracle Contract)
 6) Surplus XTZ remaining in the Hashing Contract after NFTs are transferred to the winner can be sent to COI as payment of service operation. Transfer COI earnings out of the contract and into COI custody can be conducted either manually or automatically.
-7) A user can always withdraw their funds back to their wallet before calling the Hashing contract with `processPayment = true`, or if calling the contract with `processPayment = true` fails. If there's a race to claim the final NFT reward, the losing party won't end up with their funds stuck in the contract irretrievably. 
+7) A user can always withdraw their funds back to their wallet before calling the Hashing contract with `processPayment = true`, or if calling the contract with `processPayment = true` fails. If there's a race to claim the final NFT reward, the losing party won't end up with their funds stuck in the contract irretrievably.
 
 **The above works because the Hashing Contract processes the transaction on the user's behalf. This ensures the user's answers were used to create the target hash and that the hash—since it's public knowledge—wasn't created arbitrarily.**
 
