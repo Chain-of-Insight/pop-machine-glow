@@ -17,7 +17,7 @@ type Puzzle is
     domain  : string;   // Where to find the puzzle online
     answers : bytes;    // Encrypted bytes output of hasher contract
     rewards : int       // Max claimable rewards (default 0)
-    					// Suggested max rewards capacity: testnet (10), mainnet (100)
+                        // Suggested max rewards capacity: testnet (10), mainnet (100)
   ]
 ```
 
