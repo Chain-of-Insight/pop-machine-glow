@@ -65,7 +65,7 @@ Now that we have our Zero Knowledge protocol for answer verification, we get to 
 # Getting More In Depth
 
 ## Creation
-1) Puzzle Author encrypts (Client): `Sha-256((Oracle Public Key + Hasher Public Key) + Answers) => Encrypted Bytes` (Oracle Storage)
+1) Puzzle Author encrypts the puzzle answers by calling Hashing Contract client side (Client): `Sha-256((Oracle Public Key + Hasher Public Key) + Answers) => Encrypted Bytes`
 2) Author submits create puzzle transaction. Author pays their own storage.
 
 ## Verification
