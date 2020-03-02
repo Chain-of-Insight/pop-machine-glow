@@ -48,7 +48,7 @@ The *Hashing contract* uses its public key + the Oracle contract's public key fo
 
 # What About Rewards? 
 
-Now that we have our Zero Knowledge protocol for answer verification, we get to have some fun with it! More importantly, we can reward players for finding correct answers. This requires inheriting a third contract, we can call this the *Rewards contract* which contains code for minting NFTs according to the proposed Tezos NFT standards. 
+Now that we have our Zero Knowledge protocol for answer verification, we get to do cool stuff with it. More importantly, we can reward players for finding correct answers. This requires inheriting a third contract, we can call this the *Rewards contract* which contains code for minting NFTs according to the proposed Tezos NFT standards. 
 
 ### Reward Rules
 - User must have a verified their set of solutions as 100% correct
