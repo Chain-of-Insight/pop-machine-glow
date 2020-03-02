@@ -81,7 +81,7 @@ Now that we have our Zero Knowledge protocol for answer verification, we get to 
 	- Lower round rewards are more computationally expensive for the prover. If the first claim hash is Rewards hash - 1 round, than claiming rewards is slightly more expensive for subsequent solvers. If the reverse claim order is used, the first place prize becomes the most expensive transaction.
 
 
-**The above works because using a concept known as "proving age with hash chains". For a more academic explanation see:**
+**For a more academic explanation of "proving age with hash chains" see:**
 - https://www.stratumn.com/thinking/zero-knowledge-proof-of-age-using-hash-chains/
 - https://asecuritysite.com/encryption/age
 
