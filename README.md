@@ -54,7 +54,7 @@ Now that we have our Zero Knowledge protocol for answer verification, we get to 
 - User must have a verified solution set (correct answers)
 - User can only obtain an NFT reward if there's a claimable quanitity remaining in storage. If a reward is claimed the `rewards: int` property of the `Puzzle` record gets decremented when the reward has been sent to the winner.
 
-*Note: in order to be processed securely the Rewards contract needs to be locked so that it can only be called by Hashing Contract, if it's called by other source the transaction needs to be rejected*
+*Note: in order to be processed securely the Rewards contract needs to be locked so that it can only be called by the Hashing Contract. If it's called by other source the transaction needs to be automatically rejected.*
 
 ### See:
 - Tezos NFT Standard https://nft.stove-labs.com/ (beta proposal)
