@@ -2,9 +2,9 @@
 
 ### Introducing "proof of puzzle"...All your answers are ~~belong~~ _unknown_ to us
 
-PoP Machine Glow (PoPMG) is a zero knowledge encryption oracle and DApp that provides users and puzzle authors with methods to obtain verifiable proof of test completion. PoPMG verifies your user knows an without storing a plain text copy of those answers. 
+PoP Machine Glow (PoPMG) is a zero knowledge encryption oracle and DApp that provides users and puzzle authors verifiable proof of passing a test. It verifies that your user knows the correct answer to a question without revealing what the question or its answers might be.
 
-Storage of puzzle answers is handled by the Oracle smart contract; this contract stores the Puzzle ID and its associated answers in a Michelson record type:
+Storage of puzzle answers is handled by the Oracle smart contract. This contract stores the Puzzle ID and its associated answers in a Michelson record type:
 
 Example (Ligo / Pascal)
 
