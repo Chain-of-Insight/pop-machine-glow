@@ -13,9 +13,9 @@ type return is list (operation) * author_storage
 function main (const p : unit; const author_storage : author_storage) : return is
   ((nil : list (operation)), author_storage)
 
-function approve (const index : nat; const author_address : address; var authors : author_storage) : author_storage is
+function add (const index : nat; const author_address : address; var authors : author_storage) : author_storage is
   block {
-    // Verify sender is approved to add another author
+    // Verify sender is approved to add another author to the registry
     const author_instance : author =
       case author_storage[Tezos.sender] of
         Some (instance) -> instance
@@ -25,11 +25,28 @@ function approve (const index : nat; const author_address : address; var authors
     if author_storage[Tezos.sender].approved =/= true
         failwith ("Permissions failed")
 
+    // Adds empty author entry
+    // Approval and stake amount handled by fn approve
+    authors[author_address] := record [
+        stake = map(address, 0n)
+        approved = false
+    ];
+  } with authors
+
+  function approve (const index : nat; const author_address : address; var authors : author_storage) : author_storage is
+  block {
+    // Verify sender has been added
+    const author_instance : author =
+      case author_storage[Tezos.sender] of
+        Some (instance) -> instance
+      | None -> (failwith ("Permissions failed") : author)
+      end;
+
     // Verify stake
-    if Tezos.amount =/= staking_price then
+    if Tezos.amount >= staking_price then
       failwith ("Staking amount rejected");
 
-    // Add author
+    // Add author stake
     authors[author_address] := record [
         stake = map(address, Tezos.amount)
         approved = true
@@ -38,12 +55,21 @@ function approve (const index : nat; const author_address : address; var authors
 
   function leave_registry (const index : nat; var authors : author_storage) : author_storage is
   block {
-    // Verify sender is approved to add another author
+    // Verify sender is approved
     const author_instance : author =
       case author_storage[Tezos.sender] of
         Some (instance) -> instance
       | None -> (failwith ("Permissions failed") : author)
       end;
+
+    // Verify use cases for leaving (withdrawing stake)
+    if author_storage[Tezos.sender].approved =/= true
+        failwith ("Permissions failed")
+    if author_storage[Tezos.sender].stake < staking_price
+        failwith ("Permissions failed")
+
+    // Verify Author does not have active puzzles before withdrawing stake
+    // TODO This? (needs to happen from Oracle call?)
 
     // Withdraw stake
     // TODO: This
