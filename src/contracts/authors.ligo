@@ -8,7 +8,7 @@ type author is
 
 type author_storage is map (address, author)
 
-type staking_price is nat
+type staking_price is tez
 
 type return is list (operation) * author_storage
 
@@ -17,11 +17,19 @@ function main (const p : unit; const author_storage : author_storage) : return i
 
 function getSender(const mock: bool): address is
   block {
-    var senderAddress: address := sender;  
+    var senderAddress: address := Tezos.sender;  
     if mock 
       then senderAddress := ("tz1cmWyycuCBdHVHVCnXbRLdKfjNSesRPJyz" : address);
       else skip
   } with(senderAddress)
+
+function getStakeValue(const mock: bool): tez is
+  block {
+    var senderAmount: tez := Tezos.amount;  
+    if mock 
+      then senderAmount := 1mutez;
+      else skip
+  } with(senderAmount)
 
 function add (const index : nat; const author_address : address; var author_storage : author_storage) : author_storage is
   block {
@@ -47,28 +55,32 @@ function add (const index : nat; const author_address : address; var author_stor
     author_storage[(author_address)] := (author_entry)
   } with author_storage
 
-  // function approve (const index : nat; var authors : author_storage) : author_storage is
-  // block {
-  //   // Verify sender has been added
-  //   const senderAddress: address = getSender(False);
-  //   const author_instance : author =
-  //     case author_storage[senderAddress] of
-  //       Some (instance) -> instance
-  //     | None -> (failwith ("Permissions failed") : author)
-  //     end;
+  function approve (const index : nat; var author_storage : author_storage) : author_storage is
+  block {
+    // Verify sender has been added
+    const senderAddress: address = getSender(False);
+    const author_instance : author =
+      case author_storage[senderAddress] of
+        Some (instance) -> instance
+      | None -> (failwith ("Permissions failed") : author)
+      end;
 
-  //   // Verify stake
-  //   if Tezos.amount >= staking_price then
-  //     failwith ("Staking amount rejected");
+    // Verify stake
+    const stakeValue : tez = getStakeValue(False);
+    // if stakeValue <= staking_price then
+    //   failwith ("Staking amount rejected");
 
-  //   // Add author stake
-  //   authors[senderAddress] := record [
-  //       stake = map[
-  //         (senderAddress : address) -> (Tezos.amount)
-  //       ];
-  //       approved = true
-  //   ];
-  // } with authors
+    // Add author stake
+    const a_stake : author_stake = map[(senderAddress) -> (stakeValue)];
+    
+    const author_entry : author = 
+      record [
+        stake = a_stake;
+        approved = True
+      ];
+    
+    author_storage[(senderAddress)] := (author_entry)
+  } with author_storage
 
   // function leave_registry (const index : nat; var authors : author_storage) : author_storage is
   // block {
