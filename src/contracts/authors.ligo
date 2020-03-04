@@ -62,14 +62,11 @@ function add (const index : nat; const author_address : address; var authors : a
       | None -> (failwith ("Permissions failed") : author)
       end;
 
-    // Verify use cases for leaving (withdrawing stake)
+    // Verify stake / approval
     if author_storage[Tezos.sender].approved =/= true
         failwith ("Permissions failed")
     if author_storage[Tezos.sender].stake < staking_price
         failwith ("Permissions failed")
-
-    // Verify Author does not have active puzzles before withdrawing stake
-    // TODO This? (needs to happen from Oracle call?)
 
     // Withdraw stake
     // TODO: This
