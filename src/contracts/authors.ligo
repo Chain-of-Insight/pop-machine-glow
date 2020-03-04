@@ -103,7 +103,7 @@ function add (const index : nat; const author_address : address; var author_stor
     const is_approved : bool = author_instance.approved;
 
     if is_approved =/= True then
-      failwith ("Permissions failed")
+      failwith ("Author entry already unapproved")
     else skip;
 
     // Withdraw stake
