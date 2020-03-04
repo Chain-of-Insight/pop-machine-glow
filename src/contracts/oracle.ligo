@@ -32,7 +32,7 @@ type entry_action is
   | Update of create_params
   | Solve of solve_params
 
-type puzzle_storage is map (nat, puzzle)
+type puzzle_storage is big_map (nat, puzzle)
 
 (* define return for readability *)
 type return is list (operation) * puzzle_storage

@@ -147,3 +147,5 @@ ligo dry-run oracle.ligo --syntax pascaligo main 'Solve(record [ id = 1583258505
             claimed = 1n
           ];
 ]'
+
+ligo compile-contract oracle.ligo --syntax pascaligo main
