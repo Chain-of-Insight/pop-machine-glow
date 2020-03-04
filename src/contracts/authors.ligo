@@ -84,7 +84,7 @@ function add (const index : nat; const author_address : address; var author_stor
 
   function leave_registry (const index : nat; var author_storage : author_storage) : return is
   block {
-    // Verify sender is approved
+    // Verify sender record
     const senderAddress: address = getSender(False);
     const author_instance : author =
       case author_storage[senderAddress] of
@@ -92,17 +92,19 @@ function add (const index : nat; const author_address : address; var author_stor
       | None -> (failwith ("Permissions failed") : author)
       end;
 
+    // Verify stake exists
     const staking_instance : tez =
       case author_instance.stake[senderAddress] of
         Some (instance) -> instance
-      | None -> (failwith ("Permissions failed") : tez)
+      | None -> (failwith ("Inadequate stake") : tez)
       end;
 
-    // Verify stake / approval
-    // if author_storage[senderAddress].approved =/= true
-    //     failwith ("Permissions failed")
-    // if author_storage[senderAddress].stake < staking_price
-    //     failwith ("Permissions failed")
+    // Verify approval
+    const is_approved : bool = author_instance.approved;
+
+    if is_approved =/= True then
+      failwith ("Permissions failed")
+    else skip;
 
     // Withdraw stake
     const staking_price : tez = staking_instance;
