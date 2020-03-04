@@ -44,7 +44,6 @@ function add (const index : nat; const author_address : address; var author_stor
         stake = zero_stake;
         approved = False
       ];
-    // m [("tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN": address)] := (4,9)
     author_storage[(author_address)] := (author_entry)
   } with author_storage
 
