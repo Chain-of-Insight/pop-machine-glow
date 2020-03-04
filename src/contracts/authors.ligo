@@ -13,17 +13,18 @@ type return is list (operation) * author_storage
 function main (const p : unit; const author_storage : author_storage) : return is
   ((nil : list (operation)), author_storage)
 
-function getSender(const p: unit): address is
+function getSender(const mock: bool): address is
   block {
-    var senderAddress: address := Tezos.sender;
+    var senderAddress: address := sender;  
+    if mock 
+      then senderAddress := ("tz1cmWyycuCBdHVHVCnXbRLdKfjNSesRPJyz" : address);
+      else skip
   } with(senderAddress)
 
 function add (const index : nat; const author_address : address; var authors : author_storage) : author_storage is
   block {
-    const p : unit = Unit
-    const senderAddress: address = getSender(p)
-    
     // Verify sender is approved to add another author to the registry
+    const senderAddress: address = getSender(False);
     const author_instance : author =
       case author_storage[senderAddress] of
         Some (instance) -> instance
