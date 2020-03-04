@@ -77,8 +77,8 @@ function update_puzzle (const input : create_params; var puzzles : puzzle_storag
       failwith("Cannot update puzzle");
     else skip;
 
-    (* Can only update if nothing is claimed *)
-    if puzzle_instance.claimed > 0n then
+    (* One caveat; rewards cannot be less than already claimed *)
+    if input.rewards < puzzle_instance.claimed then
       failwith("Cannot update puzzle");
     else skip;
 
