@@ -37,12 +37,14 @@ function add (const index : nat; const author_address : address; var authors : a
     // Adds empty author entry
     // Approval and stake amount handled by fn approve
     authors[author_address] := record [
-        stake = map(address, 0tez);
+        stake = map[
+          (author_address : address) -> (0tez)
+        ];
         approved = false
     ];
   } with authors
 
-  function approve (const index : nat; const author_address : address; var authors : author_storage) : author_storage is
+  function approve (const index : nat; var authors : author_storage) : author_storage is
   block {
     // Verify sender has been added
     const senderAddress: address = getSender(False);
@@ -57,8 +59,10 @@ function add (const index : nat; const author_address : address; var authors : a
       failwith ("Staking amount rejected");
 
     // Add author stake
-    authors[author_address] := record [
-        stake = map(address, Tezos.amount);
+    authors[senderAddress] := record [
+        stake = map[
+          (senderAddress : address) -> (Tezos.amount)
+        ];
         approved = true
     ];
   } with authors
