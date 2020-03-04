@@ -100,6 +100,11 @@ function claim_reward (const input : solve_params; var puzzles : puzzle_storage)
       | None -> (failwith ("Unknown puzzle index") : puzzle)
       end;
 
+    (* Author claiming own prize? *)
+    if Tezos.sender = puzzle_instance.author then
+      failwith("No rewards are claimable.");
+    else skip;
+
     (* Current depth in hashchain to verify *)
     const atdepth : nat = abs(puzzle_instance.rewards - puzzle_instance.claimed);
 
