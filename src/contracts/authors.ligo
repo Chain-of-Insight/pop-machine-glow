@@ -23,7 +23,7 @@ function getSender(const mock: bool): address is
       else skip
   } with(senderAddress)
 
-function getStakeValue(const mock: bool): tez is
+function getInitialStakeValue(const mock: bool): tez is
   block {
     var senderAmount: tez := Tezos.amount;  
     if mock 
@@ -66,7 +66,7 @@ function add (const index : nat; const author_address : address; var author_stor
       end;
 
     // Verify stake
-    const stakeValue : tez = getStakeValue(False);
+    const stakeValue : tez = getInitialStakeValue(False);
     // if stakeValue <= staking_price then
     //   failwith ("Staking amount rejected");
 
@@ -99,7 +99,8 @@ function add (const index : nat; const author_address : address; var author_stor
     //     failwith ("Permissions failed")
 
     // Withdraw stake
-    // TODO: This
+    const payoutOperation : operation = transaction (unit, (author_instance.stake[senderAddress] : tez), senderAddress);
+    const operations : list(operation) = list [payoutOperation];
 
     // Reset stake storage
     const zero_stake : author_stake = map[(senderAddress : address) -> (0mutez)];
