@@ -50,7 +50,7 @@ function approve (const index : nat; const author_address : address; var authors
 
     // Add author
     authors[Tezos.sender] := record [
-        stake = map(address, 0n)
+        stake = map(Tezos.sender, 0n)
         approved = false
     ];
   } with authors
