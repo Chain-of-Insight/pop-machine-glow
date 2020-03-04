@@ -10,3 +10,5 @@ ligo dry-run oracle.ligo --syntax pascaligo main unit 'map [
             rewards = 10n
           ];
 ]'
+
+ligo compile-contract oracle.ligo --syntax pascaligo main

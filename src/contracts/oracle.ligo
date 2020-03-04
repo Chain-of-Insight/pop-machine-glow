@@ -9,7 +9,7 @@ type puzzle is
   ]
 
 
-type puzzle_storage is map (nat, puzzle)
+type puzzle_storage is big_map (nat, puzzle)
 
 type return is list (operation) * puzzle_storage
 
