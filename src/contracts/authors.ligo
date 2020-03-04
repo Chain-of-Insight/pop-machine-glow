@@ -34,12 +34,12 @@ function add (const index : nat; const author_address : address; var authors : a
     if author_instance.approved =/= False then
         failwith ("Permissions failed")
 
-    // Adds empty author entry
-    // Approval and stake amount handled by fn approve
+    // Adds unstaked author entry
+    const authorStake = map [
+      (author_address : address) -> (0 : tez)
+    ]
     authors[author_address] := record [
-        stake = map[
-          (author_address : address) -> (0tez)
-        ];
+        stake = authorStake
         approved = false
     ];
   } with authors
