@@ -1,6 +1,8 @@
+type author_stake is map (address, tez)
+
 type author is
   record [ 
-    stake    : map(address, tez); // e.g. (Author, Stake)
+    stake    : author_stake; // e.g. (Author, Stake)
     approved : bool
   ]
 
@@ -21,73 +23,75 @@ function getSender(const mock: bool): address is
       else skip
   } with(senderAddress)
 
-function add (const index : nat; const author_address : address; var authors : author_storage) : author_storage is
+function add (const index : nat; const author_address : address; var author_storage : author_storage) : author_storage is
   block {
     // Verify sender is approved to add another author to the registry
-    const senderAddress: address = getSender(False);
+    const senderAddress : address = getSender(False);
     const author_instance : author =
       case author_storage[senderAddress] of
         Some (instance) -> instance
       | None -> (failwith ("Permissions failed") : author)
       end;
 
-    if author_instance.approved =/= False then
-        failwith ("Permissions failed")
+    // if author_instance.approved =/= False then
+    //     failwith ("Permissions failed")
 
     // Adds unstaked author entry
-    const authorStake = map [
-      (author_address : address) -> (0 : tez)
-    ]
-    authors[author_address] := record [
-        stake = authorStake
-        approved = false
-    ];
-  } with authors
+    const zero_stake : author_stake = map[(author_address : address) -> (0mutez)];
+    
+    const author_entry : author = 
+      record [
+        stake = zero_stake;
+        approved = False
+      ];
+    // m [("tz1gjaF81ZRRvdzjobyfVNsAeSC6PScjfQwN": address)] := (4,9)
+    author_storage[(author_address)] := (author_entry)
+  } with author_storage
 
-  function approve (const index : nat; var authors : author_storage) : author_storage is
-  block {
-    // Verify sender has been added
-    const senderAddress: address = getSender(False);
-    const author_instance : author =
-      case author_storage[senderAddress] of
-        Some (instance) -> instance
-      | None -> (failwith ("Permissions failed") : author)
-      end;
+  // function approve (const index : nat; var authors : author_storage) : author_storage is
+  // block {
+  //   // Verify sender has been added
+  //   const senderAddress: address = getSender(False);
+  //   const author_instance : author =
+  //     case author_storage[senderAddress] of
+  //       Some (instance) -> instance
+  //     | None -> (failwith ("Permissions failed") : author)
+  //     end;
 
-    // Verify stake
-    if Tezos.amount >= staking_price then
-      failwith ("Staking amount rejected");
+  //   // Verify stake
+  //   if Tezos.amount >= staking_price then
+  //     failwith ("Staking amount rejected");
 
-    // Add author stake
-    authors[senderAddress] := record [
-        stake = map[
-          (senderAddress : address) -> (Tezos.amount)
-        ];
-        approved = true
-    ];
-  } with authors
+  //   // Add author stake
+  //   authors[senderAddress] := record [
+  //       stake = map[
+  //         (senderAddress : address) -> (Tezos.amount)
+  //       ];
+  //       approved = true
+  //   ];
+  // } with authors
 
-  function leave_registry (const index : nat; var authors : author_storage) : author_storage is
-  block {
-    // Verify sender is approved
-    const author_instance : author =
-      case author_storage[Tezos.sender] of
-        Some (instance) -> instance
-      | None -> (failwith ("Permissions failed") : author)
-      end;
+  // function leave_registry (const index : nat; var authors : author_storage) : author_storage is
+  // block {
+  //   // Verify sender is approved
+  //   const author_instance : author =
+  //     case author_storage[Tezos.sender] of
+  //       Some (instance) -> instance
+  //     | None -> (failwith ("Permissions failed") : author)
+  //     end;
 
-    // Verify stake / approval
-    if author_storage[Tezos.sender].approved =/= true
-        failwith ("Permissions failed")
-    if author_storage[Tezos.sender].stake < staking_price
-        failwith ("Permissions failed")
+  //   // Verify stake / approval
+  //   if author_storage[Tezos.sender].approved =/= true
+  //       failwith ("Permissions failed")
+  //   if author_storage[Tezos.sender].stake < staking_price
+  //       failwith ("Permissions failed")
 
-    // Withdraw stake
-    // TODO: This
+  //   // Withdraw stake
+  //   // TODO: This
 
-    // Add author
-    authors[Tezos.sender] := record [
-        stake = map(Tezos.sender, 0tez)
-        approved = false
-    ];
-  } with authors
+  //   // Add author
+  //   authors[Tezos.sender] := record [
+  //       stake = map(Tezos.sender, 0tez)
+  //       approved = false
+  //   ];
+  // } with authors
