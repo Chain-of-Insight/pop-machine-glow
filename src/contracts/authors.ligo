@@ -31,7 +31,7 @@ function add (const index : nat; const author_address : address; var authors : a
       | None -> (failwith ("Permissions failed") : author)
       end;
 
-    if author_instance.approved == False then
+    if author_instance.approved =/= False then
         failwith ("Permissions failed")
 
     // Adds empty author entry
