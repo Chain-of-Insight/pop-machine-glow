@@ -27,6 +27,7 @@ class OracleTest(TestCase):
     @classmethod
     def setUpClass(cls):
         cls.oracle = ContractInterface.create_from(join(dirname(__file__), 'build/oracle.tz'))
+        cls.maxDiff = None
 
 
     def test_create_new_blank(self):
@@ -39,7 +40,7 @@ class OracleTest(TestCase):
                         'id': 1583093350498,
                         'rewards': 10,
                         'rewards_h': '7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e'}}
-        self.assertDictEqual(expected, res.storage)
+        self.assertDictEqual(expected, res.big_map_diff[""])
 
 
     def test_create_existing(self):
@@ -68,7 +69,7 @@ class OracleTest(TestCase):
                     'id': 1583258505553,
                     'rewards': 5,
                     'rewards_h': '7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e'}
-        self.assertDictEqual(expected, res.storage[1583258505553])
+        self.assertDictEqual(expected, res.big_map_diff[""][1583258505553])
 
 
     def test_can_update_own_puzzle(self):
@@ -85,7 +86,7 @@ class OracleTest(TestCase):
                     'id': 1583093350498,
                     'rewards': 5,
                     'rewards_h': '6b2c38e3a7d1bbca95cd302d03d77c1c0c90085f229f35caa0914d7dcd1b44b4'}
-        self.assertDictEqual(expected, res.storage[1583093350498])
+        self.assertDictEqual(expected, res.big_map_diff[""][1583093350498])
 
 
     def test_cannot_update_others_puzzle(self):
@@ -132,7 +133,7 @@ class OracleTest(TestCase):
         res = self.oracle \
             .solve(id=1583093350498, proof=proof) \
             .result(storage=storage, sender="tz1cmWyycuCBdHVHVCnXbRLdKfjNSesRPJyz")
-        self.assertEqual(1, res.storage[1583093350498]['claimed'])
+        self.assertEqual(1, res.big_map_diff[""][1583093350498]['claimed'])
 
 
     def test_can_only_be_one_1st_solver(self):
@@ -164,7 +165,7 @@ class OracleTest(TestCase):
         res = self.oracle \
             .solve(id=1583093350498, proof=proof) \
             .result(storage=storage, sender="tz1cmWyycuCBdHVHVCnXbRLdKfjNSesRPJyz")
-        self.assertEqual(2, res.storage[1583093350498]['claimed'])
+        self.assertEqual(2, res.big_map_diff[""][1583093350498]['claimed'])
 
 
     def test_can_only_be_one_2nd_solver(self):
