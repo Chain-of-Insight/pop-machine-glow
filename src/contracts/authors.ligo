@@ -17,12 +17,12 @@ function add (const index : nat; const author_address : address; var authors : a
   block {
     // Verify sender is approved to add another author to the registry
     const author_instance : author =
-      case author_storage[Tezos.sender] of
+      case author_storage[sender] of
         Some (instance) -> instance
       | None -> (failwith ("Permissions failed") : author)
       end;
 
-    if author_storage[Tezos.sender].approved =/= true
+    if author_storage[sender].approved =/= true
         failwith ("Permissions failed")
 
     // Adds empty author entry
@@ -37,7 +37,7 @@ function add (const index : nat; const author_address : address; var authors : a
   block {
     // Verify sender has been added
     const author_instance : author =
-      case author_storage[Tezos.sender] of
+      case author_storage[sender] of
         Some (instance) -> instance
       | None -> (failwith ("Permissions failed") : author)
       end;
@@ -57,23 +57,23 @@ function add (const index : nat; const author_address : address; var authors : a
   block {
     // Verify sender is approved
     const author_instance : author =
-      case author_storage[Tezos.sender] of
+      case author_storage[sender] of
         Some (instance) -> instance
       | None -> (failwith ("Permissions failed") : author)
       end;
 
     // Verify stake / approval
-    if author_storage[Tezos.sender].approved =/= true
+    if author_storage[sender].approved =/= true
         failwith ("Permissions failed")
-    if author_storage[Tezos.sender].stake < staking_price
+    if author_storage[sender].stake < staking_price
         failwith ("Permissions failed")
 
     // Withdraw stake
     // TODO: This
 
     // Add author
-    authors[Tezos.sender] := record [
-        stake = map(Tezos.sender, 0n)
+    authors[sender] := record [
+        stake = map(sender, 0n)
         approved = false
     ];
   } with authors
