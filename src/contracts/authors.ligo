@@ -82,7 +82,7 @@ function add (const index : nat; const author_address : address; var author_stor
     author_storage[(senderAddress)] := (author_entry)
   } with author_storage
 
-  function leave_registry (const index : nat; var author_storage : author_storage) : author_storage is
+  function leave_registry (const index : nat; var author_storage : author_storage) : return is
   block {
     // Verify sender is approved
     const senderAddress: address = getSender(False);
@@ -92,6 +92,12 @@ function add (const index : nat; const author_address : address; var author_stor
       | None -> (failwith ("Permissions failed") : author)
       end;
 
+    const staking_instance : tez =
+      case author_instance.stake[senderAddress] of
+        Some (instance) -> instance
+      | None -> (failwith ("Permissions failed") : tez)
+      end;
+
     // Verify stake / approval
     // if author_storage[senderAddress].approved =/= true
     //     failwith ("Permissions failed")
@@ -99,8 +105,10 @@ function add (const index : nat; const author_address : address; var author_stor
     //     failwith ("Permissions failed")
 
     // Withdraw stake
-    const payoutOperation : operation = transaction (unit, (author_instance.stake[senderAddress] : tez), senderAddress);
-    const operations : list(operation) = list [payoutOperation];
+    const staking_price : tez = staking_instance;
+    const destination : contract(unit) = get_contract(senderAddress);
+    const payoutOperation : operation = transaction (unit, staking_price, destination);
+    const op : list(operation) = list [payoutOperation];
 
     // Reset stake storage
     const zero_stake : author_stake = map[(senderAddress : address) -> (0mutez)];
@@ -112,4 +120,4 @@ function add (const index : nat; const author_address : address; var author_stor
         approved = False
       ];
     author_storage[(senderAddress)] := (author_entry)
-  } with author_storage
+  } with (op, author_storage)
