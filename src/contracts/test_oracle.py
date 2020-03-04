@@ -198,3 +198,19 @@ class OracleTest(TestCase):
             res = self.oracle \
                 .solve(id=1583093350498, proof=proof) \
                 .result(storage=storage, sender="tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb")
+
+
+    def test_cannot_claim_more_than_allowed_rewards(self):
+        solution = "identify gentle hazard impact boy say rotate fame robot hole dog economy"
+        storage = {1583093350498: {
+            'id': 1583093350498,
+            'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+            'claimed': 10,
+            'rewards': 10,
+            'rewards_h': generate_proof(solution, 11) # rewards_h = HASH^rewards+1(Solution)
+        }}
+        proof = generate_proof(solution, 1)
+        with self.assertRaises(MichelsonRuntimeError):
+            res = self.oracle \
+                .solve(id=1583093350498, proof=proof) \
+                .result(storage=storage, sender="tz1cmWyycuCBdHVHVCnXbRLdKfjNSesRPJyz")
