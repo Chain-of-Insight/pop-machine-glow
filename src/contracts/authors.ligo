@@ -37,7 +37,7 @@ function add (const index : nat; const author_address : address; var authors : a
     // Adds empty author entry
     // Approval and stake amount handled by fn approve
     authors[author_address] := record [
-        stake = map(address, 0n);
+        stake = map(address, 0tez);
         approved = false
     ];
   } with authors
@@ -83,7 +83,7 @@ function add (const index : nat; const author_address : address; var authors : a
 
     // Add author
     authors[Tezos.sender] := record [
-        stake = map(Tezos.sender, 0n)
+        stake = map(Tezos.sender, 0tez)
         approved = false
     ];
   } with authors
