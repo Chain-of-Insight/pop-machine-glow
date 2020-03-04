@@ -29,6 +29,7 @@ type solve_params is
 (* Valid entry points *)
 type entry_action is
   | Create of create_params
+  | Update of create_params
   | Solve of solve_params
 
 type puzzle_storage is map (nat, puzzle)
@@ -59,6 +60,34 @@ function create_puzzle (const input : create_params; var puzzles : puzzle_storag
 
     (* Update puzzle storage *)
     puzzles[input.id] := puzzle;
+
+  } with (noOperations, puzzles)
+
+function update_puzzle (const input : create_params; var puzzles : puzzle_storage) : return is
+  block {
+    (* Retrieve puzzle from storage or fail *)
+    const puzzle_instance : puzzle =
+      case puzzles[input.id] of
+        Some (instance) -> instance
+      | None -> (failwith ("Unknown puzzle index") : puzzle)
+      end;
+
+    (* Only author can update *)
+    if Tezos.sender =/= puzzle_instance.author then
+      failwith("Cannot update puzzle");
+    else skip;
+
+    (* Can only update if nothing is claimed *)
+    if puzzle_instance.claimed > 0n then
+      failwith("Cannot update puzzle");
+    else skip;
+
+    (* Update puzzle *)
+    puzzle_instance.rewards_h := input.rewards_h;
+    puzzle_instance.rewards   := input.rewards;
+
+    (* Update puzzle storage *)
+    puzzles[puzzle_instance.id] := puzzle_instance;
 
   } with (noOperations, puzzles)
 
@@ -100,5 +129,6 @@ function main (const action : entry_action; var puzzles : puzzle_storage) : retu
     skip
   } with case action of
     | Create(param) -> create_puzzle(param, puzzles)
+    | Update(param) -> update_puzzle(param, puzzles)
     | Solve(param)  -> claim_reward(param, puzzles)
   end;
