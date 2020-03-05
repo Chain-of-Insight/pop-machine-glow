@@ -1,4 +1,4 @@
-ligo dry-run oracle.ligo --syntax pascaligo --sender=tz1WtSgQKTpHUNfXwGFKQtXfphZWkLE2FPCs main 'Mint(
+ligo dry-run nft.ligo --syntax pascaligo --sender=tz1WtSgQKTpHUNfXwGFKQtXfphZWkLE2FPCs main 'Mint(
   record [
     nftToMintId = 2n;
     nftToMint = record [
