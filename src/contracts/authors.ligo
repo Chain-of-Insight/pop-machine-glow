@@ -13,9 +13,6 @@ const staking_price : staking_price = 1000000mutez // e.g. 1 XTZ
 
 type return is list (operation) * author_storage
 
-function main (const p : unit; const author_storage : author_storage) : return is
-  ((nil : list (operation)), author_storage)
-
 function getSender(const mock: bool): address is
   block {
     var sender_address: address := Tezos.sender;  
@@ -136,3 +133,6 @@ function add (const index : nat; const author_address : address; var author_stor
       ];
     author_storage[(sender_address)] := (author_entry)
   } with (op, author_storage)
+
+function main (const p : unit; const author_storage : author_storage) : return is
+  ((nil : list (operation)), author_storage)
