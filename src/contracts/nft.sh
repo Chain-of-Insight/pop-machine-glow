@@ -1,4 +1,4 @@
-ligo dry-run nft.ligo --syntax pascaligo --sender=tz1WtSgQKTpHUNfXwGFKQtXfphZWkLE2FPCs main \
+ligo dry-run nft.ligo --syntax pascaligo --source=tz1WtSgQKTpHUNfXwGFKQtXfphZWkLE2FPCs main \
 'Mint(
   record [
     nftToMintId = 2n;
