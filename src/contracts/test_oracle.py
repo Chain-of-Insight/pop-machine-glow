@@ -101,15 +101,32 @@ class OracleTest(TestCase):
                 .result(storage=storage, sender="tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb")
 
 
-    def test_cannot_update_already_claimed(self):
+    def test_can_update_available_rewards(self):
         storage = {1583093350498: {'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
-                        'claimed': 1,
+                        'claimed': 2,
+                        'id': 1583093350498,
+                        'rewards': 10,
+                        'rewards_h': '7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e'}}
+        res = self.oracle \
+            .update(id=1583093350498, rewards=5, rewards_h='6b2c38e3a7d1bbca95cd302d03d77c1c0c90085f229f35caa0914d7dcd1b44b4') \
+            .result(storage=storage, sender="tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb")
+        expected = {'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+                    'claimed': 2,
+                    'id': 1583093350498,
+                    'rewards': 5,
+                    'rewards_h': '6b2c38e3a7d1bbca95cd302d03d77c1c0c90085f229f35caa0914d7dcd1b44b4'}
+        self.assertDictEqual(expected, res.big_map_diff[""][1583093350498])
+
+
+    def test_cannot_update_less_than_already_claimed(self):
+        storage = {1583093350498: {'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+                        'claimed': 2,
                         'id': 1583093350498,
                         'rewards': 10,
                         'rewards_h': '7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e'}}
         with self.assertRaises(MichelsonRuntimeError):
             res = self.oracle \
-                .update(id=1583093350498, rewards=5, rewards_h='6b2c38e3a7d1bbca95cd302d03d77c1c0c90085f229f35caa0914d7dcd1b44b4') \
+                .update(id=1583093350498, rewards=1, rewards_h='6b2c38e3a7d1bbca95cd302d03d77c1c0c90085f229f35caa0914d7dcd1b44b4') \
                 .result(storage=storage, sender="tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb")
 
 
