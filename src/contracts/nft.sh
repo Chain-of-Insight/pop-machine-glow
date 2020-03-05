@@ -1,3 +1,15 @@
+# type actionMint is record [
+#   nftToMintId : nftId;
+#   nftToMint : nft;
+# ]
+
+# type nftId is nat;
+
+# type nft is record [
+#     owner : address;
+#     data: bytes;
+# ]
+
 ligo dry-run nft.ligo --syntax pascaligo --sender=tz1WtSgQKTpHUNfXwGFKQtXfphZWkLE2FPCs main 'Mint(
   record [
     nftToMintId = 2n;
@@ -9,7 +21,7 @@ ligo dry-run nft.ligo --syntax pascaligo --sender=tz1WtSgQKTpHUNfXwGFKQtXfphZWkL
 )' \
 'record [
   owner = "tz1cmWyycuCBdHVHVCnXbRLdKfjNSesRPJyz";
-  data= 0x7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e
+  data = 0x7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e
 ]'
 
 ligo compile-contract nft.ligo --syntax pascaligo main
