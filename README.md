@@ -74,7 +74,7 @@ Now that we have our Zero Knowledge protocol for answer verification, we get to 
 1) Users submit their answers to the DApp which calls the Hashing contract to test. Can proceed to next step if solutions are correct and output hash matches the Oracle contract storage (Client)
 2) If NFT rewards are available, and a User has the correct set of answers, they can send a transaction to rewards claim function to claim a reward (Hasing Contract / Oracle Contract)
 	- Note: rewards are computationally expensive proportionate to claim order
-3) To verify and obtain an NFT reward claimants user their answers with the help of the Hashing Contract Prover to solve a hash puzzle in a specific order (Client):
+3) To obtain an NFT reward and proof of puzzle completion claimants verify their answers with the help of the Hashing Contract Prover to solve a hash puzzle in a specific order (Client):
 	- Since the rewards hash is encrypted with rounds equal to Quantity + 1, the first solver calls the Prover to generate the hashes of previous rounds
 	- Lower round rewards are more computationally expensive for the prover. If the first claim hash is Rewards hash - 1 round, than claiming rewards is slightly more expensive for subsequent solvers. If the reverse claim order is used, the first place prize becomes the most expensive transaction.
 
