@@ -42,8 +42,12 @@ function add (const index : nat; const author_address : address; var author_stor
       | None -> (failwith ("Permissions failed") : author)
       end;
 
-    // if author_instance.approved =/= False then
-    //     failwith ("Permissions failed")
+    // Verify approval
+    const is_approved : bool = author_instance.approved;
+
+    if is_approved =/= True then
+      failwith ("Permissions failed")
+    else skip;
 
     // Adds unstaked / unapproved author entry
     const zero_stake : author_stake = map[(author_address : address) -> (0mutez)];
@@ -65,6 +69,13 @@ function add (const index : nat; const author_address : address; var author_stor
         Some (instance) -> instance
       | None -> (failwith ("Permissions failed") : author)
       end;
+
+    // Verify approval
+    const is_approved : bool = author_instance.approved;
+
+    if is_approved =/= True then
+      failwith ("Permissions failed")
+    else skip;
 
     // Verify stake
     const stake_value : tez = getInitialStakeValue(False);
@@ -91,7 +102,7 @@ function add (const index : nat; const author_address : address; var author_stor
     const author_instance : author =
       case author_storage[sender_address] of
         Some (instance) -> instance
-      | None -> (failwith ("Permissions failed") : author)
+      | None -> (failwith ("Author not in the registry") : author)
       end;
 
     // Verify stake exists
@@ -105,7 +116,7 @@ function add (const index : nat; const author_address : address; var author_stor
     const is_approved : bool = author_instance.approved;
 
     if is_approved =/= True then
-      failwith ("Author entry already unapproved")
+      failwith ("Author not in the registry")
     else skip;
 
     // Withdraw stake
