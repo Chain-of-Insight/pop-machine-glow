@@ -51,6 +51,8 @@ ligo dry-run authors.ligo --syntax pascaligo --sender=tz1cmWyycuCBdHVHVCnXbRLdKf
 
 
 
+
+
 # Test: Approve Author
 # Author 1n (Should fail)
 ligo dry-run authors.ligo --syntax pascaligo main --sender=tz1cmWyycuCBdHVHVCnXbRLdKfjNSesRPJyz 'Stake(unit)' 'map [
@@ -99,6 +101,17 @@ ligo dry-run authors.ligo --syntax pascaligo main --sender=tz1VwmmesDxud2BJEyDKU
         approved = False
     ];
 ]'
+####
+# Returns...
+# ( 
+#     list[] , 
+#     map[
+#         @"tz1UAtabHR2whB3PWAuEQcKiHzkbHsPzcmHH" -> record[approved -> true , stake -> map[@"tz1UAtabHR2whB3PWAuEQcKiHzkbHsPzcmHH" -> 1200000mutez]] , 
+#         @"tz1VwmmesDxud2BJEyDKUTV5T5VEP8tGBKGD" -> record[approved -> true , stake -> map[@"tz1VwmmesDxud2BJEyDKUTV5T5VEP8tGBKGD" -> 1000000mutez]] , 
+#         @"tz1cmWyycuCBdHVHVCnXbRLdKfjNSesRPJyz" -> record[approved -> true , stake -> map[@"tz1cmWyycuCBdHVHVCnXbRLdKfjNSesRPJyz" -> 1000000mutez]]
+#     ] 
+# )
+
 
 
 
@@ -168,6 +181,10 @@ ligo dry-run authors.ligo --syntax pascaligo main --sender=tz1VwmmesDxud2BJEyDKU
 # ] )
 # Author -> 3n (Should fail):
 # failwith("Author already removed from the registry")
+
+
+
+
 
 # Compile contract
 ligo compile-contract authors.ligo --syntax pascaligo main
