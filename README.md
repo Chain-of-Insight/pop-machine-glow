@@ -11,12 +11,12 @@ Example (Ligo / Pascal)
 ```
 type Puzzle is
   record [
-    id      	: nat;   	// e.g. Creation Time
-    author  	: address;  	// Author address
-    public_h 	: bytes;   	// Encrypted bytes output of hashing contract (public)
-    rewards_h 	: bytes;	// Encrypted bytes output of hashing contract (rewards)
-    rewards 	: nat       	// Max claimable rewards (default 0)
-                        	// Suggested max rewards capacity: testnet (10), mainnet (100)
+    id      	  : nat;      // e.g. Creation Time
+    author  	  : address;  // Author address
+    public_h 	  : bytes;    // Encrypted bytes output of hashing contract (public)
+    rewards_h 	: bytes;    // Encrypted bytes output of hashing contract (rewards)
+    rewards 	  : nat       // Max claimable rewards (default 0)
+                            // Suggested max rewards capacity: testnet (10), mainnet (100)
   ]
 ```
 

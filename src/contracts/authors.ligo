@@ -8,6 +8,10 @@ type author is
 
 type author_storage is map (address, author)
 
+type v_unit is unit
+
+type author_address is address
+
 (* Minimum stake required to create puzzles - Can be withdrawn by the Author at anytime 
   If withdrawn Author loses access to create new or modify existings Puzzles *)
 type staking_price is tez
@@ -15,8 +19,32 @@ const staking_price : staking_price = 1000000mutez // e.g. 1 XTZ
 
 type return is list (operation) * author_storage
 
-(* Add unpapproved unstaked Author *)
-function add (const index : nat; const author_address : address; var author_storage : author_storage) : author_storage is
+// (* Valid entry points *)
+// type entry_action is
+//   | Create of create_params
+//   | Update of create_params
+//   | Solve of solve_params
+
+(* Valid entry points *)
+type entry_action is
+  | Show of v_unit
+  | Create of author_address
+  | Stake of v_unit
+  | Withdraw of v_unit
+
+// } with case action of
+//   | Show(param)     -> list_authors(param, authors)
+//   | Create(param)   -> add(param, authors)
+//   | Stake(param)    -> approve(param, authors)
+//   | Withdraw(param) -> leave_registry(param, authors)
+// end;
+
+(* List Authors in registry (approved / unapproved) *)
+function list_authors (const input : unit; var author_storage : author_storage) : return is
+  ((nil : list (operation)), author_storage)
+
+(* Add unpapproved / unstaked Author *)
+function add (const author_address : author_address; var author_storage : author_storage) : return is
   block {
     (* Verify sender is approved to add another author to the registry *)
     const sender_address : address = Tezos.sender;
@@ -41,13 +69,13 @@ function add (const index : nat; const author_address : address; var author_stor
         approved = False
       ];
     author_storage[(author_address)] := (author_entry)
-  } with (author_storage)
+  } with ((nil : list (operation)), author_storage)
 
 (* Stake and approve in the registry *)
-function approve (const index : nat; var author_storage : author_storage) : author_storage is
+function approve (const input : unit; var author_storage : author_storage) : return is
   block {
     (* Verify sender has been added *)
-    const sender_address: address = Tezos.sender;
+    const sender_address : address = Tezos.sender;
     const author_instance : author =
       case author_storage[sender_address] of
         Some (instance) -> instance
@@ -79,12 +107,12 @@ function approve (const index : nat; var author_storage : author_storage) : auth
     (* Save approved Author *)
     author_storage[(sender_address)] := (author_entry)
 
-    (* TODO: Send over payments (tips) to COI address *)
-  } with (author_storage)
+    (* TODO: Send over payments (tips) to COI address? *)
+  } with ((nil : list (operation)), author_storage)
 
 (* Withdraw Author stake - Author can rejoin at any time by staking 
   only the initial entry to the registry requires approval from a trusted source *)
-function leave_registry (const index : nat; var author_storage : author_storage) : return is
+function leave_registry (const input : unit; var author_storage : author_storage) : return is
   block {
     (* Verify Author *)
     const sender_address: address = Tezos.sender;
@@ -126,5 +154,12 @@ function leave_registry (const index : nat; var author_storage : author_storage)
     author_storage[(sender_address)] := (author_entry)
   } with (op, author_storage)
 
-function main (const p : unit; const author_storage : author_storage) : return is
-  ((nil : list (operation)), author_storage)
+function main (const action : entry_action; var author_storage : author_storage) : return is
+  block {
+    skip
+  } with case action of
+    | Show(param)     -> list_authors(param, author_storage)
+    | Create(param)   -> add(param, author_storage)
+    | Stake(param)    -> approve(param, author_storage)
+    | Withdraw(param) -> leave_registry(param, author_storage)
+  end;
