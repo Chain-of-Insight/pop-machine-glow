@@ -26,7 +26,7 @@ class OracleTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.oracle = ContractInterface.create_from(join(dirname(__file__), 'build/oracle.tz'))
+        cls.oracle = ContractInterface.create_from(join(dirname(__file__), 'build/oracle.tz'), shell='sandboxnet')
         cls.maxDiff = None
 
 
