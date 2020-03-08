@@ -19,25 +19,12 @@ const staking_price : staking_price = 1000000mutez // e.g. 1 XTZ
 
 type return is list (operation) * author_storage
 
-// (* Valid entry points *)
-// type entry_action is
-//   | Create of create_params
-//   | Update of create_params
-//   | Solve of solve_params
-
 (* Valid entry points *)
 type entry_action is
   | Show of v_unit
   | Create of author_address
   | Stake of v_unit
   | Withdraw of v_unit
-
-// } with case action of
-//   | Show(param)     -> list_authors(param, authors)
-//   | Create(param)   -> add(param, authors)
-//   | Stake(param)    -> approve(param, authors)
-//   | Withdraw(param) -> leave_registry(param, authors)
-// end;
 
 (* List Authors in registry (approved / unapproved) *)
 function list_authors (const input : unit; var author_storage : author_storage) : return is
@@ -129,14 +116,15 @@ function leave_registry (const input : unit; var author_storage : author_storage
       | None -> (failwith ("Inadequate stake") : tez)
       end;
 
-    // Verify approval
+    (* Verify approval *)
     const is_approved : bool = author_instance.approved;
 
     if is_approved =/= True then
       failwith ("Author already removed from the registry")
     else skip;
 
-    // Withdraw stake
+    (* Withdraw stake 
+      XXX Note: At the moment it witdraws everything (e.g. required stake amount + tip) *)
     const staking_price : tez = staking_instance;
     const destination : contract(unit) = get_contract(sender_address);
     const payout_operation : operation = transaction (unit, staking_price, destination);
