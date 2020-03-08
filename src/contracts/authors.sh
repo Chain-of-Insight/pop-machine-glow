@@ -16,6 +16,17 @@ ligo dry-run authors.ligo --syntax pascaligo main 'Show(unit)' 'map [
         approved = False
     ];
 ]'
+####
+# Returns...
+#
+# ( 
+#     list[] , 
+#     map[
+#         @"tz1UAtabHR2whB3PWAuEQcKiHzkbHsPzcmHH" -> record[approved -> true , stake -> map[@"tz1UAtabHR2whB3PWAuEQcKiHzkbHsPzcmHH" -> 1200000mutez]] , 
+#         @"tz1VwmmesDxud2BJEyDKUTV5T5VEP8tGBKGD" -> record[approved -> false , stake -> map[@"tz1VwmmesDxud2BJEyDKUTV5T5VEP8tGBKGD" -> 0mutez]] , 
+#         @"tz1cmWyycuCBdHVHVCnXbRLdKfjNSesRPJyz" -> record[approved -> true , stake -> map[@"tz1cmWyycuCBdHVHVCnXbRLdKfjNSesRPJyz" -> 1000000mutez]]
+#     ] 
+# )
 
 
 
