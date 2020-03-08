@@ -72,7 +72,7 @@ function approve (const input : unit; var author_storage : author_storage) : ret
     (* Verify not already approved *)
     const is_approved : bool = author_instance.approved;
 
-    if is_approved =/= True then
+    if is_approved =/= False then
       failwith ("Permissions failed")
     else skip;
 
