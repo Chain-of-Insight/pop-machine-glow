@@ -42,6 +42,9 @@ const noOperations: list(operation) = nil;
 
 function create_puzzle (const input : create_params; var puzzles : puzzle_storage) : return is
   block {
+    (* XXX TODO:
+      Verify Author exists in registry: see ./authors.ligo *)
+
     (* Make sure puzzle doesn't exist *)
     case puzzles[input.id] of
         Some (puzzle) -> failwith ("Puzzle already exists.")
