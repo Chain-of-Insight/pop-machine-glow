@@ -36,7 +36,7 @@ type action is
 | Mint of actionMint
 | Transfer of actionTransfer
 | Burn of actionBurn
-| Extension of actionExtension
+| List of actionExtension
 
 
 // Mints a new NFT by creating a new entry in the contract.
@@ -96,5 +96,5 @@ function main(const action : action; const s : storageType) : (list(operation) *
  | Mint (mt) -> mint (mt, s)
  | Transfer (tx) -> transfer (tx, s)
  | Burn (bn) -> burn (bn, s)
- | Extension (en) -> extension (en, s)
+ | List (en) -> extension (en, s)
 end
