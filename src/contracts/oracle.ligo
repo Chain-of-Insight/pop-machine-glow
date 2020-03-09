@@ -26,6 +26,14 @@ type solve_params is
     proof       : bytes;        // Solution proof for current depth (rewards - claimed)
   ]
 
+(* Input for proxy call *)
+type proxy_params is
+  record [
+    puzzle_id         : nat;
+    claim             : nat;
+    addr              : address
+  ]
+
 (* Valid entry points *)
 type entry_action is
   | Create of create_params
@@ -39,6 +47,10 @@ type return is list (operation) * puzzle_storage
 
 (* define noop for readability *)
 const noOperations: list(operation) = nil;
+
+(* Reward proxy contract address 
+   UPDATE BEFORE DEPLOYMENT *)
+const rewardProxy : address = ("KT1RkuVvmhPYmPNT8bLtM36jH3aUxRRL7HM7" : address);
 
 function create_puzzle (const input : create_params; var puzzles : puzzle_storage) : return is
   block {
@@ -118,16 +130,24 @@ function claim_reward (const input : solve_params; var puzzles : puzzle_storage)
       skip;
     else failwith("Solution proof could not be verified.");
 
-    (* Mint token and transfer
-       TODO: this *)
-
     (* Increase claimed by 1 after distribution *)
     puzzle_instance.claimed := puzzle_instance.claimed + 1n;
 
     (* Update puzzle storage *)
     puzzles[puzzle_instance.id] := puzzle_instance;
 
-  } with (noOperations, puzzles)
+    (* Send claim to reward proxy *)
+    const proxy_params : proxy_params =
+      record [
+        puzzle_id = puzzle_instance.id;
+        claim = puzzle_instance.claimed;
+        addr = Tezos.sender
+      ];
+    const proxy : contract (proxy_params) = get_contract (rewardProxy);
+    const proxyOperation : operation = transaction (proxy_params, 0tz, proxy);
+    const operations : list(operation) = list [proxyOperation]
+
+  } with (operations, puzzles)
 
 function main (const action : entry_action; var puzzles : puzzle_storage) : return is
   block {
