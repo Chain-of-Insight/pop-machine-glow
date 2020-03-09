@@ -1,4 +1,5 @@
-type author_stake is map (address, tez)
+type author_address is address
+type author_stake is map (author_address, tez)
 
 type author is
   record [ 
@@ -6,11 +7,7 @@ type author is
     approved : bool
   ]
 
-type author_storage is map (address, author)
-
-type v_unit is unit
-
-type author_address is address
+type author_storage is map (author_address, author)
 
 (* Minimum stake required to create puzzles - Can be withdrawn by the Author at anytime 
   If withdrawn Author loses access to create new or modify existings Puzzles *)
@@ -21,10 +18,10 @@ type return is list (operation) * author_storage
 
 (* Valid entry points *)
 type entry_action is
-  | Show of v_unit
+  | Show of unit
   | Create of author_address
-  | Stake of v_unit
-  | Withdraw of v_unit
+  | Stake of unit
+  | Withdraw of unit
 
 (* List Authors in registry (approved / unapproved) *)
 function list_authors (const input : unit; var author_storage : author_storage) : return is
