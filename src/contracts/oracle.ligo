@@ -146,8 +146,13 @@ function claim_reward (const input : solve_params; var puzzles : puzzle_storage)
         claim = puzzle_instance.claimed;
         addr = Tezos.sender
       ];
-    const proxy : contract (proxy_params) = get_contract (rewardProxy);
-    const proxyOperation : operation = transaction (proxy_params, 0tz, proxy);
+    const proxy_entrypoint : contract (proxy_params) = get_entrypoint(
+        // which entrypoint we want to call
+        "%grantReward", 
+        // at which contract address this entrypoint can be found
+        rewardProxy
+    );
+    const proxyOperation : operation = transaction (proxy_params, 0tz, proxy_entrypoint);
     const operations : list(operation) = list [proxyOperation]
 
   } with (operations, puzzles)
