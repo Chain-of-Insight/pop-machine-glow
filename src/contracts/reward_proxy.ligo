@@ -65,7 +65,7 @@ function add_deposit (const input : deposit_params; var s : storage) : return is
 (* Grant reward to puzzle solver *)
 function grant_reward (const input : addr_params; var s : storage) : return is
   block {
-    if Tezos.source =/= s.contractOracle then
+    if Tezos.sender =/= s.contractOracle then
       failwith("NOPERM")
     else skip;
 
