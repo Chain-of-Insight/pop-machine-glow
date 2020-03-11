@@ -45,6 +45,8 @@ import {
   getBalance
 } from '../../services/tezProvider';
 
+import { generateProofAsString } from '../../services/hasher.js';
+
 export default {
   data: () => ({
     title: "Create new puzzle",
@@ -54,7 +56,8 @@ export default {
     currentBalance: null,
     connected: false,
     Tezos: Tezos,
-    mountProvider: mountProvider
+    mountProvider: mountProvider,
+    generateProofAsString: generateProofAsString
   }),
   mounted: async function () {
     await this.mountProvider();
