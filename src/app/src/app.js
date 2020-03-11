@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import AppTpl from './AppTpl';
-
 Vue.use(VueRouter);
 
 // Components
