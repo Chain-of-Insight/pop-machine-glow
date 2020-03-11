@@ -1,0 +1,41 @@
+{
+  "name": "popmg-dapp",
+  "version": "0.1.0",
+  "description": "PoP Machine Glow is a zero knowledge \"proof of puzzle\" oracle and DApp. PoPMG verifies your user knows an answer to your question without itself knowing that answer or its question.",
+  "main": "app.js",
+  "scripts": {
+    "run": "parcel src/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Chain-of-Insight/pop-machine-glow.git"
+  },
+  "keywords": [
+    "tezos",
+    "cryptography",
+    "blockchain",
+    "DApp"
+  ],
+  "author": "@chainofinsight",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Chain-of-Insight/pop-machine-glow/issues"
+  },
+  "homepage": "https://github.com/Chain-of-Insight/pop-machine-glow#readme",
+  "dependencies": {
+    "@taquito/taquito": "^6.0.3-beta.0",
+    "@taquito/tezbridge-signer": "^6.1.0-beta.0",
+    "dotenv": "^8.2.0",
+    "vue": "^2.6.11",
+    "vue-hot-reload-api": "^2.3.4",
+    "vue-router": "^3.1.6"
+  },
+  "devDependencies": {
+    "@vue/component-compiler-utils": "^3.1.1",
+    "parcel-bundler": "^1.12.4",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "alias": {
+    "vue": "./node_modules/vue/dist/vue.esm.js"
+  }
+}
