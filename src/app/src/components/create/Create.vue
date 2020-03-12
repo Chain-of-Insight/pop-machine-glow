@@ -83,7 +83,6 @@
             <button 
               class="btn-inverse" 
               @click="generateEncryptedAnswers()"
-              v-if="!puzzle.solutions.encrypted"
             >Encrypt Answers</button>
           </div>
         </div>
