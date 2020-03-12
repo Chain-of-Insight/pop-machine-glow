@@ -33,6 +33,56 @@
           <router-link to="/">Back</router-link>
         </li>
       </ul>
+
+      <!-- Create Puzzle Form -->
+      <div class="create-wizard jumbotron">
+        
+        <!-- Step: DEFINE ANSWERS (Plain Text) -->
+        <div v-if="currentStep == DEFINE_ANSWERS">
+          <!-- Set Answer Quantity -->
+          <label for="p_quantity">Riddle quantity:</label>
+          <p class="descr">How many secret answers are needed to solve your entire puzzle?</p>
+          <input name="p_quantity" type="number" v-model="puzzle.solutionQuantity" min="0" max="50" />
+          <!-- Enter Plain Text Solutions (N Times) -->
+          <div v-for="index in solutionQuantity" class="solution raw">
+            <label>Answer #{{ index }}</label><br/>
+            <input type="text" placeholder="Secret answer" v-model="puzzle.solutions.raw[index - 1]" />
+          </div>
+        </div>
+
+        <div v-if="currentStep == ENCRYPT_ANSWERS">
+          <!-- READ ONLY: Answer Quantity -->
+          <label for="p_quantity_read_only">Riddle quantity:</label>
+          <input name="p_quantity_read_only" type="number" v-model="puzzle.solutionQuantity" min="0" max="50" readonly />
+          <!-- READ ONLY: Solutions (N Times) -->
+          <h5>Plain text solutions:</h5>
+          <div v-for="index in solutionQuantity" class="solution raw">
+            <input type="text" placeholder="Secret answer" v-model="puzzle.solutions.raw[index - 1]" readonly />
+          </div>
+          <!-- Submit for encryption -->
+          <div class="crypto-trigger">
+            <button class="btn-inverse" @click="generateEncryptedAnswers()">Encrypt Answers</button>
+          </div>
+        </div>
+
+        <!-- Step Controls (Next / Previous) -->
+        <div>
+          <!-- Prev. Step -->
+          <button 
+            class="btn-primary step-back" 
+            v-if="currentStep > DEFINE_ANSWERS"
+            @click="--currentStep"
+          >Previous</button>
+          <!-- Next Step -->
+          <button 
+            class="btn-primary step-forward" 
+            v-if="currentStep < CREATE_PUZZLE" 
+            @click="++currentStep"
+            :disabled="!isValidSolutionSet"
+          >Next</button>
+        </div>
+      </div>
+
     </div>
 
   </div>
@@ -57,7 +107,20 @@ export default {
     connected: false,
     Tezos: Tezos,
     mountProvider: mountProvider,
-    generateProofAsString: generateProofAsString
+    generateProofAsString: generateProofAsString,
+    // State machine
+    DEFINE_ANSWERS: 0, 
+    ENCRYPT_ANSWERS: 1,
+    CREATE_PUZZLE: 2,
+    steps: [0,1,2], // e.g. DEFINE_ANSWERS, ENCRYPT_ANSWERS, CREATE_PUZZLE
+    currentStep: 0, // DEFINE_ANSWERS,
+    puzzle: {
+      solutionQuantity: 0,
+      solutions: {
+        raw: [],
+        encrypted: null
+      }
+    }
   }),
   mounted: async function () {
     await this.mountProvider();
@@ -93,13 +156,64 @@ export default {
         }
       }
     },
+    generateEncryptedAnswers: async function () {
+      //const generateProofAsString = function(message, depth)
+      if (typeof this.puzzle.solutions.raw !== 'object') {
+        return;
+      } else if (!this.puzzle.solutions.raw.length) {
+        return;
+      }
+      // Create string from answer array
+      let answers = JSON.stringify(this.puzzle.solutions.raw);
+      let encryptedAnswers = await this.generateProofAsString(answers, (this.puzzle.solutionQuantity + 1));
+      console.log(encryptedAnswers);
+      this.puzzle.solutions.encrypted = encryptedAnswers;
+    }
+  },
+  computed: {
+    solutionQuantity: function () {
+      if (isNaN(this.puzzle.solutionQuantity)) {
+        return 0;
+      } else if (this.puzzle.solutionQuantity < 1) {
+        return 0;
+      } else {
+        return Number(this.puzzle.solutionQuantity);
+      }
+    },
+    isValidSolutionSet: function () {
+      switch (this.currentStep) {
+        case this.DEFINE_ANSWERS:
+          // Parse empty fields
+          let emptyFields = 0;
+          for (let i = 0; i < this.puzzle.solutions.raw.length; i++) {
+            //console.log([typeof this.puzzle.solutions.raw[i]], i);
+            if (typeof this.puzzle.solutions.raw[i] !== 'string') {
+              ++emptyFields;
+            } else if (this.puzzle.solutions.raw[i].length < 1) {
+              ++emptyFields
+            }
+            if (i == (this.puzzle.solutionQuantity - 1)) {
+              if (emptyFields == 0) {
+                //console.log(true);
+                return true;
+              } else {
+                //console.log(false);
+                return false;
+              }
+            }
+          }
+          break;
+        default:
+          return false;
+      }
+    }
   }
 };
 </script>
 
 <style scoped>
   .container {
-    width: 600px;
+    width: 80%;
     margin: 50px auto;
     text-align: center;
   }
@@ -110,7 +224,25 @@ export default {
   li, button {
     padding: 1rem;
     margin: 1rem;
-    background: aliceblue;
+  }
+  button {
     cursor: pointer;
+  }
+  button:disabled {
+    opacity: 0.7;
+  }
+  div.create-wizard {
+    text-align: left;
+  }
+  div.solution {
+    margin-top: 1rem;
+  }
+  input[type=text] {
+    width: 100%;
+  }
+  button {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2rem;
   }
 </style>
