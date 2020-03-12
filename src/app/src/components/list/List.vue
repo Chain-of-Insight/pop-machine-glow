@@ -17,7 +17,7 @@
       <p v-if="address">
         <strong>Your address: </strong>
         <span>{{ address }} </span>
-        <span class="balance-status" v-if="currentBalance">({{ currentBalance }} ꜩ)</span>
+        <span class="balance-status" v-if="currentBalance"><strong>({{ currentBalance }} ꜩ)</strong></span>
       </p>
       <p v-if="network">
         <strong>Current network: </strong>

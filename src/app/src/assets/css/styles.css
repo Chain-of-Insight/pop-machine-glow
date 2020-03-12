@@ -1,0 +1,11 @@
+html, body {
+  background-color: #333333;
+  color: #ffffff;
+}
+.jumbotron {
+  color: #000000;
+}
+div.navigation {
+  padding-top: 1rem;
+  padding-left: 1rem;
+}

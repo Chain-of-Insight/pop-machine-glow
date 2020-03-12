@@ -17,23 +17,29 @@
       <p v-if="address">
         <strong>Your address: </strong>
         <span>{{ address }} </span>
-        <span class="balance-status" v-if="currentBalance">({{ currentBalance }} ꜩ)</span>
+        <span class="balance-status" v-if="currentBalance"><strong>({{ currentBalance }} ꜩ)</strong></span>
       </p>
       <p v-if="network">
         <strong>Current network: </strong>
         <span>{{ network }}</span>
       </p>
+
+      <!-- Back Home -->
+      <div>
+        <ul>
+          <li>
+            <router-link to="/">Back</router-link>
+          </li>
+        </ul>
+      </div>
+
     </div>
 
     <!-- Content -->
     <div class="container">
+      
       <h1>{{ title }}</h1>
-      <ul>
-        <li>
-          <router-link to="/">Back</router-link>
-        </li>
-      </ul>
-
+      
       <!-- Create Puzzle Form -->
       <div class="create-wizard jumbotron">
         
@@ -56,11 +62,12 @@
           <label for="p_quantity_read_only">Riddle quantity:</label>
           <input name="p_quantity_read_only" type="number" v-model="puzzle.solutionQuantity" min="0" max="50" readonly />
           <!-- READ ONLY: Solutions (N Times) -->
-          <h5>Plain text solutions:</h5>
+          <h5>Plain-text answers:</h5>
           <div v-for="index in solutionQuantity" class="solution raw">
             <input type="text" placeholder="Secret answer" v-model="puzzle.solutions.raw[index - 1]" readonly />
           </div>
           <!-- Enc. Output -->
+          <h5 v-if="puzzle.solutions.encrypted">Encrypted answers:</h5>
           <div class="solution enc" v-if="puzzle.solutions.encrypted">
             <input 
               type="text" 
@@ -251,7 +258,7 @@ export default {
 <style scoped>
   .container {
     width: 80%;
-    margin: 50px auto;
+    margin: 10px auto;
     text-align: center;
   }
   ul {
@@ -288,5 +295,8 @@ export default {
     margin-left: auto;
     margin-right: auto;
     margin-top: 2rem;
+  }
+  h5 {
+    margin-top: 1rem;
   }
 </style>
