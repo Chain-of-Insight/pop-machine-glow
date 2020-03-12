@@ -258,6 +258,9 @@ export default {
       list-style: none;
       display: inline-block;
   }
+  li {
+    background: aliceblue;
+  }
   li, button {
     padding: 1rem;
     margin: 1rem;
