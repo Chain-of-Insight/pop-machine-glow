@@ -119,7 +119,7 @@ import {
   getBalance
 } from '../../services/tezProvider';
 
-import { generateProofAsString } from '../../services/hasher.js';
+import { generateProofAsString } from '../../services/hasher';
 
 export default {
   data: () => ({
