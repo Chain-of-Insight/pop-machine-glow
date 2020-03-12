@@ -16,9 +16,9 @@ const router = new VueRouter({
   // mode: 'history',
   // base: __dirname,
   routes: [
-    { path: '/', component: Home },
-    { path: '/puzzles', component: List },
-    { path: '/puzzle/create', component: Create }//,
+    { name: 'home', path: '/', component: Home },
+    { name: 'puzzles', path: '/puzzles', component: List },
+    { name: 'creator', path: '/puzzle/create', component: Create }//,
     // { path: '/puzzle/:id', component: View },
     // { path: '/puzzle/submit/:id', component: Solve },
     // { path: '/puzzle/claim/:id', component: Claim }

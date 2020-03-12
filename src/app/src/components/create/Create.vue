@@ -50,6 +50,7 @@
           </div>
         </div>
 
+        <!-- Step: ENCRYPT ANSWERS (enc) -->
         <div v-if="currentStep == ENCRYPT_ANSWERS">
           <!-- READ ONLY: Answer Quantity -->
           <label for="p_quantity_read_only">Riddle quantity:</label>
@@ -59,9 +60,32 @@
           <div v-for="index in solutionQuantity" class="solution raw">
             <input type="text" placeholder="Secret answer" v-model="puzzle.solutions.raw[index - 1]" readonly />
           </div>
+          <!-- Enc. Output -->
+          <div class="solution enc" v-if="puzzle.solutions.encrypted">
+            <input 
+              type="text" 
+              class="bg-success success"
+              placeholder="Secret answer" 
+              v-model="puzzle.solutions.encrypted" 
+              v-if="(typeof puzzle.solutions.encrypted == 'string' && puzzle.solutions.encrypted.length == 66)"
+              readonly 
+            />
+          </div>
           <!-- Submit for encryption -->
           <div class="crypto-trigger">
-            <button class="btn-inverse" @click="generateEncryptedAnswers()">Encrypt Answers</button>
+            <button 
+              class="btn-inverse" 
+              @click="generateEncryptedAnswers()"
+              v-if="!puzzle.solutions.encrypted"
+            >Encrypt Answers</button>
+          </div>
+        </div>
+
+        <!-- Step: Submit Create Puzzle Tx. -->
+        <div v-if="currentStep == CREATE_PUZZLE">
+          <h5>Your puzzle is ready to be submitted to the Tezos network</h5>
+          <div class="crypto-trigger">
+            <button class="btn-inverse" @click="createPuzzleTx()">Create Puzzle</button>
           </div>
         </div>
 
@@ -108,6 +132,7 @@ export default {
     Tezos: Tezos,
     mountProvider: mountProvider,
     generateProofAsString: generateProofAsString,
+    canProceed: false,
     // State machine
     DEFINE_ANSWERS: 0, 
     ENCRYPT_ANSWERS: 1,
@@ -156,8 +181,9 @@ export default {
         }
       }
     },
-    generateEncryptedAnswers: async function () {
-      //const generateProofAsString = function(message, depth)
+    generateEncryptedAnswers: function () {
+      this.canProceed = false;
+
       if (typeof this.puzzle.solutions.raw !== 'object') {
         return;
       } else if (!this.puzzle.solutions.raw.length) {
@@ -165,9 +191,18 @@ export default {
       }
       // Create string from answer array
       let answers = JSON.stringify(this.puzzle.solutions.raw);
-      let encryptedAnswers = await this.generateProofAsString(answers, (this.puzzle.solutionQuantity + 1));
-      console.log(encryptedAnswers);
+      let encryptedAnswers = this.generateProofAsString(answers, (this.puzzle.solutionQuantity + 1));
+      console.log('Encrypted set =>', [typeof encryptedAnswers,encryptedAnswers]);
       this.puzzle.solutions.encrypted = encryptedAnswers;
+      this.canProceed = true;
+
+    },
+    createPuzzleTx: async function () {
+      let todo = `
+      TODO: Deploy contracts so we can send a Create Puzzle transaction to the Oracle Contract
+      `;
+      alert(todo);
+      this.$router.push('/puzzles');
     }
   },
   computed: {
@@ -203,6 +238,8 @@ export default {
             }
           }
           break;
+        case this.ENCRYPT_ANSWERS:
+          return this.canProceed;
         default:
           return false;
       }
@@ -239,6 +276,10 @@ export default {
   }
   input[type=text] {
     width: 100%;
+    padding: 1rem;
+  }
+  input.success {
+    color: #ffffff;
   }
   button {
     margin-left: auto;
