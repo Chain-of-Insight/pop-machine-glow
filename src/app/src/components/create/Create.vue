@@ -49,6 +49,21 @@
           <label for="p_quantity">Riddle quantity:</label>
           <p class="descr">How many secret answers are needed to solve your entire puzzle?</p>
           <input name="p_quantity" type="number" v-model="puzzle.solutionQuantity" min="0" max="50" />
+
+          <!-- Set Prize Quantity -->
+          <div class="rewards-toggle">
+            <p>Offer rewards: </p>
+            <label for="rewards">Yes: </label>
+            <input type="radio" id="rewards" name="rewards" v-bind:value="true" v-model="hasRewards">
+            <label for="rewards">No: </label>
+            <input type="radio" id="no_rewards" name="rewards" v-bind:value="false" v-model="hasRewards">
+          </div>
+          <div class="rewards-quantity" v-if="hasRewards">
+            <label for="pr_quantity">Prize quantity:</label>
+            <p class="descr">How many NFT prizes are you offering as reward?</p>
+            <input name="pr_quantity" type="number" v-model="puzzle.rewardQuantity" min="0" max="10" />
+          </div>
+
           <!-- Enter Plain Text Solutions (N Times) -->
           <div v-for="index in solutionQuantity" class="solution raw">
             <label>Answer #{{ index }}</label><br/>
@@ -61,6 +76,11 @@
           <!-- READ ONLY: Answer Quantity -->
           <label for="p_quantity_read_only">Riddle quantity:</label>
           <input name="p_quantity_read_only" type="number" v-model="puzzle.solutionQuantity" min="0" max="50" readonly />
+          <!-- READ ONLY: Rewards Quantity -->
+          <div class="rewards-quantity" v-if="hasRewards">
+            <label for="pr_quantity">Prize quantity:</label>
+            <input name="pr_quantity" type="number" v-model="puzzle.rewardQuantity" min="0" max="10" readonly />
+          </div>
           <!-- READ ONLY: Solutions (N Times) -->
           <h5>Plain-text answers:</h5>
           <div v-for="index in solutionQuantity" class="solution raw">
@@ -145,8 +165,10 @@ export default {
     CREATE_PUZZLE: 2,
     steps: [0,1,2], // e.g. DEFINE_ANSWERS, ENCRYPT_ANSWERS, CREATE_PUZZLE
     currentStep: 0, // DEFINE_ANSWERS,
+    hasRewards: false,
     puzzle: {
       solutionQuantity: 0,
+      rewardQuantity: 0,
       solutions: {
         raw: [],
         encrypted: null
@@ -195,13 +217,22 @@ export default {
       } else if (!this.puzzle.solutions.raw.length) {
         return;
       }
+
+      console.log([typeof this.hasRewards]);
+
+      if (typeof this.hasRewards !== "boolean") {
+        this.puzzle.rewardQuantity = 0;
+      } else if (!this.hasRewards) {
+        this.puzzle.rewardQuantity = 0;
+      } 
+
       // Create string from answer array
       let answers = JSON.stringify(this.puzzle.solutions.raw);
-      let encryptedAnswers = this.generateProofAsString(answers, (this.puzzle.solutionQuantity + 1));
-      console.log('Encrypted set =>', [typeof encryptedAnswers,encryptedAnswers]);
+      let encryptedAnswers = this.generateProofAsString(answers, (this.puzzle.rewardQuantity + 1));
       this.puzzle.solutions.encrypted = encryptedAnswers;
       this.canProceed = true;
-
+      console.log('Encrypted set =>', [typeof encryptedAnswers,encryptedAnswers]);
+      console.log('this.puzzle =>', this.puzzle);
     },
     createPuzzleTx: async function () {
       let todo = `
@@ -283,6 +314,10 @@ export default {
   div.solution {
     margin-top: 1rem;
   }
+  input[type=radio] {
+    margin-left: 0.25rem;
+    margin-right: 0.5rem;
+  }
   input[type=text] {
     width: 100%;
     padding: 1rem;
@@ -297,5 +332,11 @@ export default {
   }
   h5 {
     margin-top: 1rem;
+  }
+  div.rewards-toggle, div.rewards-quantity {
+    padding-top: 1rem;
+  }
+  .descr {
+    font-size: 14px;
   }
 </style>

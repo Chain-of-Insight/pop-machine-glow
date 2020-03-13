@@ -9,3 +9,6 @@ div.navigation {
   padding-top: 1rem;
   padding-left: 1rem;
 }
+li.connect {
+  color: #007bff;
+}

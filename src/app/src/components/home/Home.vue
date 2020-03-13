@@ -5,7 +5,7 @@
     <div class="connect-wallet" v-if="!connected">
       <div>
         <ul>
-          <li @click="connectUser()">
+          <li class="connect" @click="connectUser()">
             <span class="btn-connect">Connect</span>
           </li>
         </ul>
