@@ -38,6 +38,10 @@
       </ul>
     </div>
 
+    <div class="footer">
+      <img src="../../assets/img/pop_machine.png" />
+    </div>
+
   </div>
 </template>
 
@@ -106,12 +110,25 @@ export default {
   }
   ul {
       list-style: none;
-      display: inline-block;
+      display: block;
+      padding-left: 0;
+  }
+  li {
+    width: 30%;
+    display: inline-block;
   }
   li, button {
     padding: 1rem;
     margin: 1rem;
     background: aliceblue;
     cursor: pointer;
+  }
+  div.footer {
+    width: 100%;
+    display: block;
+    text-align: center;
+  }
+  div.footer img {
+    margin: auto;
   }
 </style>

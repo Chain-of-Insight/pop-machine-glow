@@ -77,10 +77,10 @@
           <label for="p_quantity_read_only">Riddle quantity:</label>
           <input name="p_quantity_read_only" type="number" v-model="puzzle.solutionQuantity" min="0" max="50" readonly />
           <!-- READ ONLY: Rewards Quantity -->
-          <div class="rewards-quantity" v-if="hasRewards">
-            <label for="pr_quantity">Prize quantity:</label>
-            <input name="pr_quantity" type="number" v-model="puzzle.rewardQuantity" min="0" max="10" readonly />
-          </div>
+          <span v-if="hasRewards">
+            <label class="rewards-quantity" class="pr_quantity" for="pr_quantity_read_only">Prize quantity:</label>
+            <input name="pr_quantity_read_only" type="number" v-model="puzzle.rewardQuantity" min="0" max="10" readonly />
+          </span>
           <!-- READ ONLY: Solutions (N Times) -->
           <h5>Plain-text answers:</h5>
           <div v-for="index in solutionQuantity" class="solution raw">
@@ -335,6 +335,9 @@ export default {
   }
   div.rewards-toggle, div.rewards-quantity {
     padding-top: 1rem;
+  }
+  label.rewards-quantity {
+    margin-left: 1rem;
   }
   .descr {
     font-size: 14px;
