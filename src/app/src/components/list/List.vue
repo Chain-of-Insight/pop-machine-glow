@@ -42,7 +42,9 @@
 import { 
   Tezos,
   mountProvider,
-  getBalance
+  getBalance,
+  getContractInstance,
+  contracts
 } from '../../services/tezProvider';
 
 export default {
@@ -54,7 +56,12 @@ export default {
     currentBalance: null,
     connected: false,
     Tezos: Tezos,
-    mountProvider: mountProvider
+    mountProvider: mountProvider,
+    getContractInstance: getContractInstance,
+    contracts: contracts,
+    contractInstance: null,
+    puzzleStorage: null,
+    puzzles: []
   }),
   mounted: async function () {
     await this.mountProvider();
@@ -68,6 +75,8 @@ export default {
       this.currentBalance = Number(balance) / 1000000;
       //console.log("User balance =>", this.currentBalance);
     }
+    // Load puzzle storage
+    this.loadStorage();
   },
   methods: {
     connectUser: async function () {
@@ -90,6 +99,31 @@ export default {
         }
       }
     },
+    loadStorage: async function () {//here
+      const contractAddress = this.contracts.oracle;
+      this.contractInstance = await this.getContractInstance(contractAddress);
+      this.puzzleStorage = await this.contractInstance.storage();
+      let originationEntry = await this.getPuzzle("1583093350498");
+      this.puzzles.push(originationEntry);
+      console.log('Storage =>', this.puzzleStorage);
+      console.log('Puzzles =>', this.puzzles);
+    },
+    getPuzzle: async function (bigMapKey) {
+      if (!this.puzzleStorage)
+        return;
+      else if (typeof this.puzzleStorage !== 'object')
+        return;
+      else if (typeof bigMapKey !== 'string')
+        return;
+      
+      try {
+        let bigMapEntry = await this.puzzleStorage.get(bigMapKey);
+        return bigMapEntry;
+      } catch(e) {
+        console.log(e);
+      }
+
+    }
   }
 };
 </script>

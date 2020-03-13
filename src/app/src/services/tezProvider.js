@@ -1,6 +1,9 @@
 import { TezBridgeSigner } from '@taquito/tezbridge-signer';
 import { Tezos } from '@taquito/taquito';
 
+const oracleContract = process.env.ORACLE_CONTRACT;
+const rewardsContract = process.env.REWARDS_CONTRACT;
+
 const mountProvider = function () {
   Tezos.setProvider({
     rpc: process.env.TESTNET,
@@ -22,6 +25,10 @@ const getContractInstance = async (contract) => {
 
 module.exports = {
   Tezos: Tezos,
+  contracts: {
+    oracle: oracleContract,
+    rewards: rewardsContract
+  },
   mountProvider: mountProvider,
   getBalance: getBalance,
   getContractInstance: getContractInstance

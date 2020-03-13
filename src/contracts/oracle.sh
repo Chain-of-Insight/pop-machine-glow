@@ -148,4 +148,14 @@ ligo dry-run oracle.ligo --syntax pascaligo main 'Solve(record [ id = 1583258505
           ];
 ]'
 
-ligo compile-contract oracle.ligo --syntax pascaligo main
+ligo compile-contract oracle.ligo --syntax pascaligo main > build/oracle.tz
+
+ligo compile-storage oracle.ligo main 'big_map [
+    1583093350498n -> record [
+      id = 1583093350498n;
+      author = ("tz1UAtabHR2whB3PWAuEQcKiHzkbHsPzcmHH" : address );
+      rewards_h = 0x7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e;
+      rewards = 5n;
+      claimed = 0n
+    ];
+]' > build/oracle.init.tz

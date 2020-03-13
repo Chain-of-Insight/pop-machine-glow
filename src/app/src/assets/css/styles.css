@@ -11,4 +11,5 @@ div.navigation {
 }
 li.connect {
   color: #007bff;
+  width: 100px !important;
 }

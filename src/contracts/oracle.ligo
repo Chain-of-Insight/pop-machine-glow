@@ -50,7 +50,7 @@ const noOperations: list(operation) = nil;
 
 (* Reward proxy contract address 
    UPDATE BEFORE DEPLOYMENT *)
-const rewardProxy : address = ("KT1RkuVvmhPYmPNT8bLtM36jH3aUxRRL7HM7" : address);
+const rewardProxy : address = ("KT1HAjg2uwgYgbaygjEjH1ouBQsMhSwEGxg3" : address); // Last updated: Mar. 13, 13h40
 
 function create_puzzle (const input : create_params; var puzzles : puzzle_storage) : return is
   block {
