@@ -142,7 +142,9 @@
 import { 
   Tezos,
   mountProvider,
-  getBalance
+  getBalance,
+  getContractInstance,
+  contracts
 } from '../../services/tezProvider';
 
 import { generateProofAsString } from '../../services/hasher';
@@ -159,6 +161,8 @@ export default {
     mountProvider: mountProvider,
     generateProofAsString: generateProofAsString,
     canProceed: false,
+    getContractInstance: getContractInstance,
+    contracts: contracts,
     // State machine
     DEFINE_ANSWERS: 0, 
     ENCRYPT_ANSWERS: 1,
@@ -166,6 +170,7 @@ export default {
     steps: [0,1,2], // e.g. DEFINE_ANSWERS, ENCRYPT_ANSWERS, CREATE_PUZZLE
     currentStep: 0, // DEFINE_ANSWERS,
     hasRewards: false,
+    loading: false,
     puzzle: {
       solutionQuantity: 0,
       rewardQuantity: 0,
@@ -173,7 +178,12 @@ export default {
         raw: [],
         encrypted: null
       }
-    }
+    },
+    puzzleLength: 0,
+    // Tx. Data
+    explorerPrefix: "https://babylonnet.tzstats.com/",
+    transactionExplorerLink: null,
+    transactionData: null
   }),
   mounted: async function () {
     await this.mountProvider();
@@ -187,6 +197,8 @@ export default {
       this.currentBalance = Number(balance) / 1000000;
       //console.log("User balance =>", this.currentBalance);
     }
+    // Load puzzle storage
+    this.loadStorage();
   },
   methods: {
     connectUser: async function () {
@@ -218,8 +230,6 @@ export default {
         return;
       }
 
-      console.log([typeof this.hasRewards]);
-
       if (typeof this.hasRewards !== "boolean") {
         this.puzzle.rewardQuantity = 0;
       } else if (!this.hasRewards) {
@@ -235,11 +245,100 @@ export default {
       console.log('this.puzzle =>', this.puzzle);
     },
     createPuzzleTx: async function () {
-      let todo = `
-      TODO: Deploy contracts so we can send a Create Puzzle transaction to the Oracle Contract
-      `;
-      alert(todo);
-      this.$router.push('/puzzles');
+      // Set loading
+      this.loading = true;
+
+      // Contract instance
+      const contractAddress = this.contracts.oracle;
+      this.contractInstance = this.getContractInstance(contractAddress);
+      
+      // Resolve transaction
+      this.contractInstance.then(async (contract) => {
+        console.log('Contract', contract);
+        
+        // Constructor args.
+        let id = Number(this.puzzleLength + 1),
+            rewards = Number(this.puzzle.rewardQuantity),
+            rewards_h = this.puzzle.solutions.encrypted.slice(2,-1),
+            questions = Number(this.puzzle.solutionQuantity);
+
+        let submit = [id, rewards, rewards_h, questions];
+        
+        console.log('calling args.', submit);
+
+        let result = await contract.methods.create(id, questions, rewards, rewards_h).send();
+
+        // Polls every 1 sec. for incoming data
+        let timedEvent = setInterval(() => {
+          if (result.hasOwnProperty('results')) {
+              if (result.results) {
+                  if (result.results.length) {
+                      clearInterval(timedEvent);
+                      let opResults = result.results;
+                      this.transactionData = JSON.stringify(opResults, null, 2); // Indent 2 JSON output spaces
+                      this.loading = false;
+                      let hash = (result.hasOwnProperty('hash')) ? String(result.hash) : false;
+                      if (hash) {
+                          this.transactionExplorerLink = this.explorerPrefix + hash;
+                      }
+                  }
+              }
+          }
+        }, 1000);
+
+      }).catch((error) => {
+          console.log('ERROR CREATING PUZZLE: =>', error);
+          this.loading = false;
+      });
+
+      //this.$router.push('/puzzles');
+    },
+    loadStorage: async function () {
+      const contractAddress = this.contracts.oracle;
+      this.contractInstance = await this.getContractInstance(contractAddress);
+      this.puzzleStorage = await this.contractInstance.storage();
+      console.log('Storage =>', this.puzzleStorage);
+
+      // Iterate big_map with natural keys
+      let iterating = true;
+      let i = 0;
+      while (iterating && i < 5) {
+        let puzzleEntry = await this.getPuzzle(String(i));
+        if (!puzzleEntry) {
+          iterating = false;
+          break;
+        } else {
+          this.puzzleLength = i;
+          ++i;
+        }
+      }
+      console.log('Puzzle Quantity =>', (this.puzzleLength + 1));
+    },
+    getPuzzle: async function (bigMapKey) {
+      if (!this.puzzleStorage)
+        return;
+      else if (typeof this.puzzleStorage !== 'object')
+        return;
+      else if (typeof bigMapKey !== 'string')
+        return;
+      
+      try {
+        let bigMapEntry = await this.puzzleStorage.get(bigMapKey);
+        return bigMapEntry;
+      } catch(e) {
+        //console.log(e);
+        return false;
+      }
+
+    },
+    toBytes: function (str) {
+      let bytes = [];
+      for (let i = 0; i < str.length; i++) {
+          let char = str.charCodeAt(i);
+          bytes.push(char >>> 8);
+          bytes.push(char & 0xFF);
+      }
+      return bytes;
     }
   },
   computed: {
