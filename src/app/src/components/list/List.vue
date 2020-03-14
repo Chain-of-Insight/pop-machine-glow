@@ -19,20 +19,56 @@
         <span>{{ address }} </span>
         <span class="balance-status" v-if="currentBalance"><strong>({{ currentBalance }} ꜩ)</strong></span>
       </p>
+      
       <p v-if="network">
         <strong>Current network: </strong>
         <span>{{ network }}</span>
       </p>
+
+      <!-- Back Home -->
+      <div>
+        <ul>
+          <li>
+            <router-link to="/">Back</router-link>
+          </li>
+        </ul>
+      </div>
+
     </div>
 
     <!-- Content -->
     <div class="container">
+
       <h1>{{ title }}</h1>
-      <ul>
-        <li>
-          <router-link to="/">Back</router-link>
-        </li>
-      </ul>
+      
+      <div class="container-fluid">
+        <!-- Puzzles -->
+        <div class="card" v-for="puzzle in puzzles">
+          <!--
+          <img class="card-img-top" src="https://via.placeholder.com/25x25" alt="Card image cap">
+          -->
+          <div class="card-body">
+            <h5 class="card-title">Puzzle: {{ puzzle.id }}</h5>
+            <div class="author puzzle-entry">
+              <span class="bold">Author: </span>
+              <span class="descr">{{ puzzle.author }}</span>
+            </div>
+            <div class="rewards puzzle-entry">
+              <span class="bold">Total rewards: </span>
+              <span>{{ puzzle.rewards }}</span><br/>
+              <span class="bold">Rewards available: </span>
+              <span>{{ (puzzle.rewards - puzzle.claimed) }}</span>
+            </div>
+            <div class="answers puzzle-entry">
+              <span class="bold">Secret answer: </span>
+              <span class="descr">{{ puzzle.rewards_h }}</span>
+            </div>
+            <div class="to-puzzle puzzle-entry">
+              <router-link class="btn btn-primary" :to="'/puzzle/' + puzzle.id">Solve</router-link>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -99,7 +135,7 @@ export default {
         }
       }
     },
-    loadStorage: async function () {//here
+    loadStorage: async function () {
       const contractAddress = this.contracts.oracle;
       this.contractInstance = await this.getContractInstance(contractAddress);
       this.puzzleStorage = await this.contractInstance.storage();
@@ -143,5 +179,17 @@ export default {
     margin: 1rem;
     background: aliceblue;
     cursor: pointer;
+  }
+  div.card {
+    text-align: left;
+  }
+  .descr {
+    font-size: 14px;
+  }
+  .puzzle-entry {
+    padding: 0.5rem;
+  }
+  .to-puzzle {
+    text-align: center;
   }
 </style>

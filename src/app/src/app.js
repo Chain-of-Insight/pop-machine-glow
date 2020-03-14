@@ -7,7 +7,7 @@ Vue.use(VueRouter);
 import Home from './components/home/Home';
 import Create from './components/create/Create';
 import List from './components/list/List';
-// import View from './components/view/View';
+import View from './components/view/View';
 // import Solve from './components/solve/Solve'
 // import Claim from './components/claim/Claim';
 
@@ -18,8 +18,8 @@ const router = new VueRouter({
   routes: [
     { name: 'home', path: '/', component: Home },
     { name: 'puzzles', path: '/puzzles', component: List },
-    { name: 'creator', path: '/puzzle/create', component: Create }//,
-    // { path: '/puzzle/:id', component: View },
+    { name: 'creator', path: '/puzzle/create', component: Create },
+    { path: '/puzzle/:id', component: View }
     // { path: '/puzzle/submit/:id', component: Solve },
     // { path: '/puzzle/claim/:id', component: Claim }
   ]
