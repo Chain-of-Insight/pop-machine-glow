@@ -141,7 +141,7 @@ export default {
     },
     getPuzzle: async function () {
       if (!this.puzzleId) {
-        console.log('not ready');
+        console.log('Storage not ready');
         return;
       }
 

@@ -4,11 +4,11 @@ type puzzle is
   record [
     id          : nat;          // e.g. Creation Time
     author      : address;      // Author address
-    //public_h  : bytes;        // Encrypted bytes output of hashing contract (public)
     rewards_h   : bytes;        // Encrypted bytes output of hashing contract (rewards)
     rewards     : nat;          // Max claimable rewards (default 0)
                                 // Suggested max rewards capacity: testnet (10), mainnet (100)
-    claimed     : nat           // Number of rewards claimed
+    claimed     : nat;          // Number of rewards claimed
+    questions   : nat           // Quantity of questions concatenated in the answer hash (for DApp frontend only)
   ]
 
 (* Input for create entry *)
@@ -16,7 +16,8 @@ type create_params is
   record [
     id          : nat;          // e.g. Creation Time
     rewards     : nat;          // Max claimable rewards
-    rewards_h   : bytes         // Solution hashchain value at rewards + 1
+    rewards_h   : bytes;        // Solution hashchain value at rewards + 1
+    questions   : nat
   ]
 
 (* Input for solve entry *)
@@ -70,6 +71,7 @@ function create_puzzle (const input : create_params; var puzzles : puzzle_storag
         author    = Tezos.sender;
         rewards_h = input.rewards_h;
         rewards   = input.rewards;
+        questions = input.questions;
         claimed   = 0n
       ];
 
