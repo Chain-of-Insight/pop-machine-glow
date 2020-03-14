@@ -28,7 +28,7 @@
     <!-- Content -->
     <div class="container">
       <h1>{{ title }}</h1>
-      <ul>
+      <ul v-if="connected">
         <li>
           <router-link to="/puzzle/create">Create Puzzle</router-link>
         </li>
@@ -36,6 +36,7 @@
           <router-link to="/puzzles">Browse Puzzles</router-link>
         </li>
       </ul>
+      <p v-else>Connect your Tezos wallet to get started</p>
     </div>
 
     <div class="footer">

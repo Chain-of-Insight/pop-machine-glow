@@ -139,10 +139,21 @@ export default {
       const contractAddress = this.contracts.oracle;
       this.contractInstance = await this.getContractInstance(contractAddress);
       this.puzzleStorage = await this.contractInstance.storage();
-      let originationEntry = await this.getPuzzle("1583093350498");
-      this.puzzles.push(originationEntry);
       console.log('Storage =>', this.puzzleStorage);
-      console.log('Puzzles =>', this.puzzles);
+
+      // Iterate big_map with natural keys
+      let iterating = true;
+      let i = 0;
+      while (iterating && i < 5) {
+        let puzzleEntry = await this.getPuzzle(String(i));
+        if (!puzzleEntry) {
+          iterating = false;
+          break;
+        } else {
+          this.puzzles.push(puzzleEntry);
+          ++i;
+        }
+      }
     },
     getPuzzle: async function (bigMapKey) {
       if (!this.puzzleStorage)
@@ -156,7 +167,8 @@ export default {
         let bigMapEntry = await this.puzzleStorage.get(bigMapKey);
         return bigMapEntry;
       } catch(e) {
-        console.log(e);
+        //console.log(e);
+        return false;
       }
 
     }
