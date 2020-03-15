@@ -112,9 +112,10 @@
           <h5 v-if="currentMsgState == 0">{{ messages.READY_TO_SUBMT }}</h5>
           <h5 v-if="currentMsgState == 1">{{ messages.SUBMITTED }}</h5>
           <h5 v-if="currentMsgState == 2">{{ messages.CONFIRMED }}</h5>
-          <div class="crypto-trigger">
+          <div class="crypto-trigger" v-if="currentMsgState == 0">
             <button class="btn-inverse" @click="createPuzzleTx()">Create Puzzle</button>
           </div>
+
         </div>
 
         <!-- Step Controls (Next / Previous) -->
@@ -122,7 +123,7 @@
           <!-- Prev. Step -->
           <button 
             class="btn-primary step-back" 
-            v-if="currentStep > DEFINE_ANSWERS"
+            v-if="currentStep > DEFINE_ANSWERS && currentMsgState == 0"
             @click="--currentStep"
           >Previous</button>
           <!-- Next Step -->
