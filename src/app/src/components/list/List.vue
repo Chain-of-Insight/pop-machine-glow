@@ -43,12 +43,12 @@
       
       <div class="container-fluid">
         <!-- Puzzles -->
-        <div class="card" v-for="puzzle in puzzles">
+        <div class="card puzzle-card" v-for="(puzzle, index) in puzzles">
           <!--
           <img class="card-img-top" src="https://via.placeholder.com/25x25" alt="Card image cap">
           -->
           <div class="card-body">
-            <h5 class="card-title">Puzzle: {{ puzzle.id }}</h5>
+            <h5 class="card-title">Puzzle: {{ index + 1 }}</h5>
             <div class="author puzzle-entry">
               <span class="bold">Author: </span>
               <span class="descr">{{ puzzle.author }}</span>
@@ -192,8 +192,9 @@ export default {
     background: aliceblue;
     cursor: pointer;
   }
-  div.card {
+  div.puzzle-card {
     text-align: left;
+    margin-bottom: 1rem;
   }
   .descr {
     font-size: 14px;

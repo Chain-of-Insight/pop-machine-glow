@@ -109,7 +109,9 @@
 
         <!-- Step: Submit Create Puzzle Tx. -->
         <div v-if="currentStep == CREATE_PUZZLE">
-          <h5>Your puzzle is ready to be submitted to the Tezos network</h5>
+          <h5 v-if="currentMsgState == 0">{{ messages.READY_TO_SUBMT }}</h5>
+          <h5 v-if="currentMsgState == 1">{{ messages.SUBMITTED }}</h5>
+          <h5 v-if="currentMsgState == 2">{{ messages.CONFIRMED }}</h5>
           <div class="crypto-trigger">
             <button class="btn-inverse" @click="createPuzzleTx()">Create Puzzle</button>
           </div>
@@ -171,6 +173,12 @@ export default {
     currentStep: 0, // DEFINE_ANSWERS,
     hasRewards: false,
     loading: false,
+    currentMsgState: 0,
+    messages: {
+      READY_TO_SUBMT: "Your puzzle is ready to be submitted to the Tezos network",
+      SUBMITTED: "Your puzzle has been submitted to the Tezos network",
+      CONFIRMED: "Your puzzle has been added to the registry"
+    },
     puzzle: {
       solutionQuantity: 0,
       rewardQuantity: 0,
@@ -259,7 +267,7 @@ export default {
         // Constructor args.
         let id = Number(this.puzzleLength + 1),
             rewards = Number(this.puzzle.rewardQuantity),
-            rewards_h = this.puzzle.solutions.encrypted.slice(2,-1),
+            rewards_h = this.puzzle.solutions.encrypted.slice(2,this.puzzle.solutions.encrypted.length),
             questions = Number(this.puzzle.solutionQuantity);
 
         let submit = [id, rewards, rewards_h, questions];
@@ -267,6 +275,8 @@ export default {
         console.log('calling args.', submit);
 
         let result = await contract.methods.create(id, questions, rewards, rewards_h).send();
+
+        this.currentMsgState = 1;
 
         // Polls every 1 sec. for incoming data
         let timedEvent = setInterval(() => {
@@ -281,6 +291,8 @@ export default {
                       if (hash) {
                           this.transactionExplorerLink = this.explorerPrefix + hash;
                       }
+                      this.currentMsgState = 2;
+                      console.log([opResults, this.transactionData, this.transactionExplorerLink]);
                   }
               }
           }
@@ -330,15 +342,6 @@ export default {
         return false;
       }
 
-    },
-    toBytes: function (str) {
-      let bytes = [];
-      for (let i = 0; i < str.length; i++) {
-          let char = str.charCodeAt(i);
-          bytes.push(char >>> 8);
-          bytes.push(char & 0xFF);
-      }
-      return bytes;
     }
   },
   computed: {

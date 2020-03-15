@@ -66,9 +66,55 @@
             <div class="to-puzzle puzzle-entry">
               <div 
                 class="btn btn-primary" 
-                @click="startSolving()">Start</div>
+                @click="startSolving()"
+                v-if="!solve.started"
+              >Start</div>
+              <div 
+                class="btn btn-primary" 
+                @click="resetSolving()"
+                v-if="solve.started"
+              >Start Over</div>
             </div>
           </div>
+        </div> 
+      </div>
+
+      <div class ="container-fluid" v-if="solve.started">
+
+        <!-- Solution Wizard -->
+        <div class="solve-wizard jumbotron">
+          <!-- Enter Plain Text Solutions (N Times) -->
+          <div v-for="index in solve.questionFields" class="solution raw">
+            <label>Answer #{{ index }}</label><br/>
+            <input type="text" placeholder="Secret answer" v-model="solve.solutions.raw[index - 1]" />
+          </div>
+          <!-- Submit Solutions -->
+          <div class="crypto-trigger">
+            <button class="btn-inverse btn-solve" @click="checkSolutions()" v-if="solve.questionFields > 1">Submit Solutions</button>
+            <button class="btn-inverse btn-solve" @click="checkSolutions()" v-else>Submit Solution</button>
+          </div>
+
+          <!-- Results Display -->
+          <div class="solve-wizard" v-if="solve.result.checked">
+            <!-- Correct Result -->
+            <div class="bg-success" v-if="solve.result.submittable">
+              <p v-if="solve.questionFields > 1">Your answers have been verified locally!</p>
+              <p v-if="solve.questionFields == 1">You answer has been verified locally!</p>
+              <!-- Claim -->
+              <div class="crypto-trigger" v-if="(puzzle.rewards - puzzle.claimed) > 0">
+                <button class="btn-inverse btn-solve" @click="claimReward()">Claim Reward</button>
+              </div>
+              <div class="crypto-sorry" v-if="(puzzle.rewards - puzzle.claimed) == 0">
+                <p>There are no rewards remaining, better luck next time.</p>
+              </div>
+            </div>
+            <!-- Try again -->
+            <div class="bg-danger" v-if="!solve.result.submittable">
+              <p v-if="solve.questionFields > 1">Your answers could not be verified.</p>
+              <p v-if="solve.questionFields == 1">You answer could not be verified.</p>
+            </div>
+          </div>
+        </div>
 
       </div>
     </div>
@@ -85,6 +131,8 @@ import {
   contracts
 } from '../../services/tezProvider';
 
+import { generateProofAsString } from '../../services/hasher';
+
 export default {
   data: () => ({
     title: "Puzzle #",
@@ -97,10 +145,23 @@ export default {
     mountProvider: mountProvider,
     getContractInstance: getContractInstance,
     contracts: contracts,
+    generateProofAsString: generateProofAsString,
     contractInstance: null,
     puzzleStorage: null,
     puzzleId: null,
-    puzzle: null
+    puzzle: null,
+    solve: {
+      started: false,
+      questionFields: 0,
+      solutions: {
+        raw: [],
+        encrypted: null
+      },
+      result: { 
+        submittable: false,
+        checked: false
+      }
+    }
   }),
   mounted: async function () {
     this.puzzleId = this.$route.params.id;
@@ -158,7 +219,48 @@ export default {
 
     },
     startSolving: function () {
-      alert('TODO: Refactor oracle.ligo to store question quantity, so we know how many question fields to display to the solver...');
+      console.log(this.puzzle);
+      this.solve.questionFields = Number(this.puzzle.questions);
+      this.solve.started = true;
+      console.log(this.solve);
+    },
+    resetSolving: function () {
+      this.solve = {
+        started: false,
+        questionFields: 0,
+        solutions: {
+          raw: [],
+          encrypted: null
+        },
+        result: { 
+          submittable: false,
+          checked: false
+        }
+      };
+    },
+    checkSolutions: function () {
+      this.solve.result.submittable = false;
+      this.solve.result.checked = false;
+      // Depth
+      let depth = Number(this.puzzle.rewards) + 1;
+      console.log('Encryption depth =>', depth);
+
+      // Answers
+      let answers = JSON.stringify(this.solve.solutions.raw);
+      let encryptedAnswers = this.generateProofAsString(answers, depth);
+      console.log('Answers =>', [answers, encryptedAnswers]);
+
+      // Hash comparison
+      if (encryptedAnswers.slice(2, encryptedAnswers.length) == this.puzzle.rewards_h) {
+        this.solve.result.submittable = true; // GG!
+        this.solve.result.checked = true;
+      } else {
+        this.solve.result.checked = true;
+      }
+      console.log('this.solve', this.solve);
+    },
+    claimReward: async function () {
+      // XXX TODO: This
     }
   }
 };
@@ -191,5 +293,48 @@ export default {
   }
   .to-puzzle {
     text-align: center;
+  }
+  li, button {
+    padding: 1rem;
+    margin: 1rem;
+  }
+  button {
+    cursor: pointer;
+  }
+  button:disabled {
+    opacity: 0.7;
+  }
+  div.create-wizard {
+    text-align: left;
+  }
+  div.solution {
+    margin-top: 1rem;
+  }
+  input[type=radio] {
+    margin-left: 0.25rem;
+    margin-right: 0.5rem;
+  }
+  input[type=text] {
+    width: 100%;
+    padding: 1rem;
+  }
+  input.success {
+    color: #ffffff;
+  }
+  button {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2rem;
+  }
+  h5 {
+    margin-top: 1rem;
+  }
+  .jumbotron {
+    margin-top: 1rem;
+    text-align: left;
+  }
+  .bg-success, .bg-danger {
+    color: #ffffff;
+    padding: 2rem;
   }
 </style>
