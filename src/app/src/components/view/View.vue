@@ -39,16 +39,16 @@
     <!-- Content -->
     <div class="container">
 
-      <h1>{{ title }}{{ $route.params.id }}</h1>
+      <h1>{{ title }}{{ Number($route.params.id) + 1 }}</h1>
       
       <div class="container-fluid">
         <!-- Puzzles -->
-        <div class="card" v-if="puzzle">
+        <div class="card puzzle-card" v-if="puzzle">
           <!--
           <img class="card-img-top" src="https://via.placeholder.com/25x25" alt="Card image cap">
           -->
           <div class="card-body">
-            <h5 class="card-title">Puzzle: {{ puzzle.id }}</h5>
+            <h5 class="card-title">Puzzle: {{ Number(puzzle.id) + 1 }}</h5>
             <div class="author puzzle-entry">
               <span class="bold">Author: </span>
               <span class="descr">{{ puzzle.author }}</span>
