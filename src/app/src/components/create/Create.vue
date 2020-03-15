@@ -247,7 +247,7 @@ export default {
 
       // Create string from answer array
       let answers = JSON.stringify(this.puzzle.solutions.raw);
-      let encryptedAnswers = this.generateProofAsString(answers, (this.puzzle.rewardQuantity + 1));
+      let encryptedAnswers = this.generateProofAsString(answers, (Number(this.puzzle.rewardQuantity) + 1));
       this.puzzle.solutions.encrypted = encryptedAnswers;
       this.canProceed = true;
       console.log('Encrypted set =>', [typeof encryptedAnswers,encryptedAnswers]);
