@@ -39,7 +39,7 @@
     <!-- Content -->
     <div class="container">
 
-      <h1>{{ title }}{{ Number($route.params.id) + 1 }}</h1>
+      <h1>{{ title }}{{ Number($route.params.id) }}</h1>
       
       <div class="container-fluid">
         <!-- Puzzles -->
@@ -48,7 +48,7 @@
           <img class="card-img-top" src="https://via.placeholder.com/25x25" alt="Card image cap">
           -->
           <div class="card-body">
-            <h5 class="card-title">Puzzle: {{ Number(puzzle.id) + 1 }}</h5>
+            <h5 class="card-title">Puzzle: {{ Number(puzzle.id) }}</h5>
             <div class="author puzzle-entry">
               <span class="bold">Author: </span>
               <span class="descr">{{ puzzle.author }}</span>
@@ -184,7 +184,7 @@ export default {
       }
     },
     // Tx. Data
-    explorerPrefix: "https://babylonnet.tzstats.com/",
+    explorerPrefix: "https://better-call.dev/babylon/",
     transactionExplorerLink: null,
     transactionData: null,
     currentMsgState: 0,
@@ -272,6 +272,7 @@ export default {
     checkSolutions: function () {
       this.solve.result.submittable = false;
       this.solve.result.checked = false;
+      this.solve.result.claimSubmitted = false;
       // Depth
       let depth = Number(this.puzzle.rewards) + 1;
       console.log('Encryption depth =>', depth);
@@ -321,7 +322,7 @@ export default {
         let result = await contract.methods.solve(id, proof).send();
 
         this.currentMsgState = 1; // Tx. Submitted
-        this.solve.result.submitted = true;
+        this.solve.result.claimSubmitted = true;
 
         // Polls every 1 sec. for incoming data
         let timedEvent = setInterval(() => {
@@ -337,7 +338,7 @@ export default {
                   this.transactionExplorerLink = this.explorerPrefix + hash;
                 }
                 this.currentMsgState = 2; // Tx. Confirmed
-                console.log([this.transactionData, this.transactionExplorerLink]);
+                //console.log([this.transactionData, this.transactionExplorerLink]);
               }
             }
           }
