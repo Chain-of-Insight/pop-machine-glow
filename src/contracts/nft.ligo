@@ -1,13 +1,11 @@
 type nftId is nat;
 
-// @remarks Meta data will be added to this record.
 type nft is record [
     owner : address;
-    data: bytes;
+    data : bytes
 ]
 
 type nfts is map(nftId, nft);
-
 
 type storageType is record [
   nfts : nfts;
@@ -45,7 +43,8 @@ type action is
 function mint(const action : actionMint ; const s : storageType) : (list(operation) * storageType) is
   block { 
     // check permission
-    if source =/= s.contractOwner then failwith("You do not have permission to mint assets");
+    if Tezos.sender =/= s.contractOwner then
+      failwith("You do not have permission to mint assets");
     else skip;
     // create NFT for new ID
     const nfts : nfts = s.nfts;

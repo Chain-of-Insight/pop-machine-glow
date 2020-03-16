@@ -2,15 +2,14 @@ type trusted is address
 type puzzle_id is nat
 type claim is nat
 type deposit is map (claim, tez)
-type callback_set is map (claim, set (trusted))
 
 type storage is
   record [
     trustedContracts  : set (trusted);
     contractOwner     : trusted;
     contractOracle    : trusted;
-    deposits          : map (puzzle_id, deposit);
-    callbacks         : map (puzzle_id, callback_set)
+    contractNft       : trusted;
+    deposits          : map (puzzle_id, deposit)
   ]
 
 (* Deposit params *)
@@ -28,6 +27,17 @@ type addr_params is
     addr              : address
   ]
 
+(* mint nft params *)
+type nft is record [
+    owner             : address;
+    data              : bytes
+]
+
+type nft_params is record [
+  nftToMintId         : nat;
+  nftToMint           : nft
+]
+
 (* define return for readability *)
 type return is list (operation) * storage
 
@@ -37,6 +47,7 @@ const noOperations : list (operation) = nil;
 (* Valid entry points *)
 type entry_action is
   | SetOracle of trusted
+  | SetNft of trusted
   | ApproveContract of trusted
   | RejectContract of trusted
   | AddDeposit of deposit_params
@@ -97,12 +108,18 @@ function grant_reward (const input : addr_params; var s : storage) : return is
     }
     else skip;
 
-    (* Send NFTs *)
-    (* @TODO *)
-
-
-    (* Send contract callbacks (mint nfts, etc) *)
-    (* @TODO *)
+    (* Send NFT *)
+    const nft_params : nft_params =
+      record [
+        nftToMintId = input.puzzle_id + input.claim;
+        nftToMint = record [
+          owner = input.addr;
+          data = Bytes.pack(input)
+        ]
+      ];
+    const nft_entrypoint : contract (nft_params) = get_entrypoint("%mint", s.contractNft);
+    const nftOperation : operation = transaction (nft_params, 0tz, nft_entrypoint);
+    operations := nftOperation # operations;
 
   } with (operations, s)
 
@@ -122,6 +139,25 @@ function set_oracle(const addr : trusted; var s : storage) : return is
 
     (* Update storage *)
     s.contractOracle := addr;
+
+  } with (noOperations, s)
+
+(* Set the nft contract *)
+function set_nft(const addr : trusted; var s : storage) : return is
+  block {
+    (* Can only be called by contract creator *)
+    if Tezos.source =/= s.contractOwner then
+      failwith("NOPERM")
+    else skip;
+
+    (* Only a trusted contract can be an nft contract *)
+    const trusted : bool = s.trustedContracts contains addr;
+    if trusted = False then
+      failwith("NOPERM")
+    else skip;
+
+    (* Update storage *)
+    s.contractNft := addr;
 
   } with (noOperations, s)
 
@@ -157,6 +193,7 @@ function main (const action : entry_action; var s : storage) : return is
     skip
   } with case action of
     | SetOracle(param) -> set_oracle(param, s)
+    | SetNft(param) -> set_nft(param, s)
     | ApproveContract(param) -> approve_contract(param, s)
     | RejectContract(param) -> reject_contract(param, s)
     | AddDeposit(param) -> add_deposit(param, s)

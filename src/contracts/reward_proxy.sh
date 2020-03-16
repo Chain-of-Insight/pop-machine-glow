@@ -1,4 +1,4 @@
-ligo compile reward_proxy.ligo main > build/reward_proxy.tz
+ligo compile-contract reward_proxy.ligo main > build/reward_proxy.tz
 
 ligo compile-storage reward_proxy.ligo main 'record [
   trustedContracts = (set [] : set(address));
