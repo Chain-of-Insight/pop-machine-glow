@@ -112,8 +112,28 @@
           <h5 v-if="currentMsgState == 0">{{ messages.READY_TO_SUBMT }}</h5>
           <h5 v-if="currentMsgState == 1">{{ messages.SUBMITTED }}</h5>
           <h5 v-if="currentMsgState == 2">{{ messages.CONFIRMED }}</h5>
-          <div class="crypto-trigger" v-if="currentMsgState == 0">
-            <button class="btn-inverse" @click="createPuzzleTx()">Create Puzzle</button>
+          
+          <!-- State Display -->
+          <div v-if="!loading">
+            <!-- Create Puzzle -->
+            <div class="crypto-trigger" v-if="currentMsgState == 0">
+              <button class="btn-inverse" @click="createPuzzleTx()">Create Puzzle</button>
+            </div>
+
+            <!-- View Puzzles / Tx. Data -->
+            <div class="crypto-view" v-if="currentMsgState == 2">
+              <p>
+                <a :href="transactionExplorerLink" target="_blank">View transaction in explorer</a>
+              </p>
+              <p>
+                <router-link to="/puzzles">View Puzzles</router-link>
+              </p>
+            </div>
+          </div>
+
+          <!-- Loading Display -->
+          <div class="loading" v-if="loading">
+            <img class="loading" src="../../assets/img/loading.gif">
           </div>
 
         </div>
@@ -266,7 +286,7 @@ export default {
         console.log('Contract', contract);
         
         // Constructor args.
-        let id = Number(this.puzzleLength + 1),
+        let id = Number(this.puzzleLength) + 1,
             rewards = Number(this.puzzle.rewardQuantity),
             rewards_h = this.puzzle.solutions.encrypted.slice(2,this.puzzle.solutions.encrypted.length),
             questions = Number(this.puzzle.solutionQuantity);
@@ -277,31 +297,31 @@ export default {
 
         let result = await contract.methods.create(id, questions, rewards, rewards_h).send();
 
-        this.currentMsgState = 1;
+        this.currentMsgState = 1; // Tx. Submitted
 
         // Polls every 1 sec. for incoming data
         let timedEvent = setInterval(() => {
           if (result.hasOwnProperty('results')) {
-              if (result.results) {
-                  if (result.results.length) {
-                      clearInterval(timedEvent);
-                      let opResults = result.results;
-                      this.transactionData = JSON.stringify(opResults, null, 2); // Indent 2 JSON output spaces
-                      this.loading = false;
-                      let hash = (result.hasOwnProperty('hash')) ? String(result.hash) : false;
-                      if (hash) {
-                          this.transactionExplorerLink = this.explorerPrefix + hash;
-                      }
-                      this.currentMsgState = 2;
-                      console.log([opResults, this.transactionData, this.transactionExplorerLink]);
-                  }
+            if (result.results) {
+              if (result.results.length) {
+                clearInterval(timedEvent);
+                let opResults = result.results;
+                this.transactionData = JSON.stringify(opResults, null, 2); // Indent 2 JSON output spaces
+                this.loading = false;
+                let hash = (result.hasOwnProperty('hash')) ? String(result.hash) : false;
+                if (hash) {
+                  this.transactionExplorerLink = this.explorerPrefix + hash;
+                }
+                this.currentMsgState = 2; // Tx. Confirmed
+                console.log([this.transactionData, this.transactionExplorerLink]);
               }
+            }
           }
         }, 1000);
 
       }).catch((error) => {
-          console.log('ERROR CREATING PUZZLE: =>', error);
-          this.loading = false;
+        console.log('ERROR CREATING PUZZLE: =>', error);
+        this.loading = false;
       });
 
       //this.$router.push('/puzzles');
@@ -444,5 +464,8 @@ export default {
   }
   .descr {
     font-size: 14px;
+  }
+  .loading {
+    text-align: center;
   }
 </style>

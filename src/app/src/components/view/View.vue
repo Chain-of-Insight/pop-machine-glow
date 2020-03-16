@@ -82,7 +82,7 @@
       <div class ="container-fluid" v-if="solve.started">
 
         <!-- Solution Wizard -->
-        <div class="solve-wizard jumbotron">
+        <div class="solve-wizard jumbotron" v-if="!solve.result.claimSubmitted">
           <!-- Enter Plain Text Solutions (N Times) -->
           <div v-for="index in solve.questionFields" class="solution raw">
             <label>Answer #{{ index }}</label><br/>
@@ -114,6 +114,25 @@
               <p v-if="solve.questionFields == 1">You answer could not be verified.</p>
             </div>
           </div>
+        </div>
+
+        <!-- Claim Transaction -->
+        <div class="solve-wizard jumbotron" v-if="solve.result.claimSubmitted">
+          <h5 v-if="currentMsgState == 1">{{ messages.SUBMITTED }}</h5>
+          <h5 v-if="currentMsgState == 2">{{ messages.CONFIRMED }}</h5>
+
+            <!-- Transaction Data -->
+            <div class="crypto-view" v-if="currentMsgState == 2">
+              <p>
+                <a :href="transactionExplorerLink" target="_blank">View transaction in explorer</a>
+              </p>
+            </div>
+
+            <!-- Loading Display -->
+            <div class="loading" v-if="loading">
+              <img class="loading" src="../../assets/img/loading.gif">
+            </div>
+
         </div>
 
       </div>
@@ -150,6 +169,7 @@ export default {
     puzzleStorage: null,
     puzzleId: null,
     puzzle: null,
+    loading: false,
     solve: {
       started: false,
       questionFields: 0,
@@ -159,8 +179,19 @@ export default {
       },
       result: { 
         submittable: false,
-        checked: false
+        checked: false,
+        claimSubmitted: false
       }
+    },
+    // Tx. Data
+    explorerPrefix: "https://babylonnet.tzstats.com/",
+    transactionExplorerLink: null,
+    transactionData: null,
+    currentMsgState: 0,
+    messages: {
+      READY_TO_SUBMT: "Your reward claim is ready to be submitted to the Tezos network",
+      SUBMITTED: "Your reward claim has been submitted to the Tezos network",
+      CONFIRMED: "Reward has been transferred to your wallet"
     }
   }),
   mounted: async function () {
@@ -260,7 +291,63 @@ export default {
       console.log('this.solve', this.solve);
     },
     claimReward: async function () {
-      // XXX TODO: This
+      // Depth
+      let depth = (Number(this.puzzle.rewards) - Number(this.puzzle.claimed));
+      //let depth = Number(this.puzzle.claimed) + 1;
+      console.log('Encryption depth =>', depth);
+
+      // Answers
+      let answers = JSON.stringify(this.solve.solutions.raw);
+      let encryptedAnswers = this.generateProofAsString(answers, depth);
+      console.log('Claim Answers =>', [answers, encryptedAnswers]);
+
+      // Set loading / Debug
+      this.loading = true;
+      this.solve.solutions.encrypted = encryptedAnswers;
+
+      // Contract instance
+      const contractAddress = this.contracts.oracle;
+      this.contractInstance = this.getContractInstance(contractAddress);
+
+      // Resolve transaction
+      this.contractInstance.then(async (contract) => {
+        console.log('Contract', contract);
+
+        let id = Number(this.puzzleId),
+            proof = this.solve.solutions.encrypted.slice(2, this.solve.solutions.encrypted.length);
+
+        console.log('calling args.', [id, proof]);
+
+        let result = await contract.methods.solve(id, proof).send();
+
+        this.currentMsgState = 1; // Tx. Submitted
+        this.solve.result.submitted = true;
+
+        // Polls every 1 sec. for incoming data
+        let timedEvent = setInterval(() => {
+          if (result.hasOwnProperty('results')) {
+            if (result.results) {
+              if (result.results.length) {
+                clearInterval(timedEvent);
+                let opResults = result.results;
+                this.transactionData = JSON.stringify(opResults, null, 2); // Indent 2 JSON output spaces
+                this.loading = false;
+                let hash = (result.hasOwnProperty('hash')) ? String(result.hash) : false;
+                if (hash) {
+                  this.transactionExplorerLink = this.explorerPrefix + hash;
+                }
+                this.currentMsgState = 2; // Tx. Confirmed
+                console.log([this.transactionData, this.transactionExplorerLink]);
+              }
+            }
+          }
+        }, 1000);
+
+      }).catch((error) => {
+        console.log('ERROR CLAIMING REWARD: =>', error);
+        this.loading = false;
+      });
+
     }
   }
 };
