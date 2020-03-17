@@ -57,7 +57,7 @@
               <span class="bold">Total rewards: </span>
               <span>{{ puzzle.rewards }}</span><br/>
               <span class="bold">Rewards available: </span>
-              <span>{{ (puzzle.rewards - puzzle.claimed) }}</span>
+              <span>{{ (puzzle.rewards - puzzle.numClaimed) }}</span>
             </div>
             <div class="answers puzzle-entry">
               <span class="bold">Secret answer: </span>
@@ -101,10 +101,10 @@
               <p v-if="solve.questionFields > 1">Your answers have been verified locally!</p>
               <p v-if="solve.questionFields == 1">You answer has been verified locally!</p>
               <!-- Claim -->
-              <div class="crypto-trigger" v-if="(puzzle.rewards - puzzle.claimed) > 0">
+              <div class="crypto-trigger" v-if="(puzzle.rewards - puzzle.numClaimed) > 0">
                 <button class="btn-inverse btn-solve" @click="claimReward()">Claim Reward</button>
               </div>
-              <div class="crypto-sorry" v-if="(puzzle.rewards - puzzle.claimed) == 0">
+              <div class="crypto-sorry" v-if="(puzzle.rewards - puzzle.numClaimed) == 0">
                 <p>There are no rewards remaining, better luck next time.</p>
               </div>
             </div>
@@ -244,6 +244,7 @@ export default {
       try {
         let bigMapEntry = await this.puzzleStorage.get(this.puzzleId);
         this.puzzle = bigMapEntry;
+        this.puzzle.numClaimed = Object.keys(this.puzzle.claimed).length;
       } catch(e) {
         console.log(e);
       }
@@ -293,8 +294,8 @@ export default {
     },
     claimReward: async function () {
       // Depth
-      let depth = (Number(this.puzzle.rewards) - Number(this.puzzle.claimed));
-      //let depth = Number(this.puzzle.claimed) + 1;
+      let depth = (Number(this.puzzle.rewards) - Number(this.puzzle.numClaimed));
+      //let depth = Number(this.puzzle.numClaimed) + 1;
       console.log('Encryption depth =>', depth);
 
       // Answers
