@@ -32,12 +32,13 @@ class OracleTest(TestCase):
 
     def test_create_new_blank(self):
         res = self.oracle \
-            .create(id=1583093350498, rewards=10, rewards_h='7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e') \
+            .create(id=1583093350498, questions=2, rewards=10, rewards_h='7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e') \
             .result(storage={}, sender="tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb")
 
         expected = {1583093350498: {'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
-                        'claimed': 0,
+                        'claimed': {},
                         'id': 1583093350498,
+                        'questions': 2,
                         'rewards': 10,
                         'rewards_h': '7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e'}}
         self.assertDictEqual(expected, res.big_map_diff[""])
@@ -45,27 +46,30 @@ class OracleTest(TestCase):
 
     def test_create_existing(self):
         storage = {1583093350498: {'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
-                        'claimed': 0,
+                        'claimed': {},
+                        'questions': 2,
                         'id': 1583093350498,
                         'rewards': 10,
                         'rewards_h': '7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e'}}
         with self.assertRaises(MichelsonRuntimeError):
             res = self.oracle \
-                .create(id=1583093350498, rewards=10, rewards_h='7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e') \
+                .create(id=1583093350498, questions=2, rewards=10, rewards_h='7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e') \
                 .result(storage=storage, sender="tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb")
 
 
     def test_create_new_append(self):
         storage = {1583093350498: {'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
-                        'claimed': 0,
+                        'claimed': {},
+                        'questions': 2,
                         'id': 1583093350498,
                         'rewards': 10,
                         'rewards_h': '7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e'}}
         res = self.oracle \
-            .create(id=1583258505553, rewards=5, rewards_h='7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e') \
+            .create(id=1583258505553, questions=3, rewards=5, rewards_h='7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e') \
             .result(storage=storage, sender="tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb")
         expected = {'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
-                    'claimed': 0,
+                    'claimed': {},
+                    'questions': 3,
                     'id': 1583258505553,
                     'rewards': 5,
                     'rewards_h': '7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e'}
@@ -74,15 +78,17 @@ class OracleTest(TestCase):
 
     def test_can_update_own_puzzle(self):
         storage = {1583093350498: {'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
-                        'claimed': 0,
+                        'claimed': {},
+                        'questions': 2,
                         'id': 1583093350498,
                         'rewards': 10,
                         'rewards_h': '7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e'}}
         res = self.oracle \
-            .update(id=1583093350498, rewards=5, rewards_h='6b2c38e3a7d1bbca95cd302d03d77c1c0c90085f229f35caa0914d7dcd1b44b4') \
+            .update(id=1583093350498, questions=4, rewards=5, rewards_h='6b2c38e3a7d1bbca95cd302d03d77c1c0c90085f229f35caa0914d7dcd1b44b4') \
             .result(storage=storage, sender="tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb")
         expected = {'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
-                    'claimed': 0,
+                    'claimed': {},
+                    'questions': 4,
                     'id': 1583093350498,
                     'rewards': 5,
                     'rewards_h': '6b2c38e3a7d1bbca95cd302d03d77c1c0c90085f229f35caa0914d7dcd1b44b4'}
@@ -91,27 +97,30 @@ class OracleTest(TestCase):
 
     def test_cannot_update_others_puzzle(self):
         storage = {1583093350498: {'author': 'tz1cmWyycuCBdHVHVCnXbRLdKfjNSesRPJyz',
-                        'claimed': 0,
+                        'claimed': {},
+                        'questions': 2,
                         'id': 1583093350498,
                         'rewards': 10,
                         'rewards_h': '7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e'}}
         with self.assertRaises(MichelsonRuntimeError):
             res = self.oracle \
-                .update(id=1583093350498, rewards=5, rewards_h='6b2c38e3a7d1bbca95cd302d03d77c1c0c90085f229f35caa0914d7dcd1b44b4') \
+                .update(id=1583093350498, questions=4, rewards=5, rewards_h='6b2c38e3a7d1bbca95cd302d03d77c1c0c90085f229f35caa0914d7dcd1b44b4') \
                 .result(storage=storage, sender="tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb")
 
 
     def test_can_update_available_rewards(self):
         storage = {1583093350498: {'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
-                        'claimed': 2,
+                        'claimed': {},
                         'id': 1583093350498,
+                        'questions': 2,
                         'rewards': 10,
                         'rewards_h': '7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e'}}
         res = self.oracle \
-            .update(id=1583093350498, rewards=5, rewards_h='6b2c38e3a7d1bbca95cd302d03d77c1c0c90085f229f35caa0914d7dcd1b44b4') \
+            .update(id=1583093350498, questions=2, rewards=5, rewards_h='6b2c38e3a7d1bbca95cd302d03d77c1c0c90085f229f35caa0914d7dcd1b44b4') \
             .result(storage=storage, sender="tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb")
         expected = {'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
-                    'claimed': 2,
+                    'claimed': {},
+                    'questions': 2,
                     'id': 1583093350498,
                     'rewards': 5,
                     'rewards_h': '6b2c38e3a7d1bbca95cd302d03d77c1c0c90085f229f35caa0914d7dcd1b44b4'}
@@ -120,13 +129,14 @@ class OracleTest(TestCase):
 
     def test_cannot_update_less_than_already_claimed(self):
         storage = {1583093350498: {'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
-                        'claimed': 2,
+                        'claimed': { 'tz1codeYURj5z49HKX9zmLHms2vJN2qDjrtt': 1, 'tz1irJKkXS2DBWkU1NnmFQx1c1L7pbGg4yhk': 2 },
+                        'questions': 2,
                         'id': 1583093350498,
                         'rewards': 10,
                         'rewards_h': '7b15bb3dee5f8891f60cd181ff424012548a9ed5e26721eb9f6518e9dd409d9e'}}
         with self.assertRaises(MichelsonRuntimeError):
             res = self.oracle \
-                .update(id=1583093350498, rewards=1, rewards_h='6b2c38e3a7d1bbca95cd302d03d77c1c0c90085f229f35caa0914d7dcd1b44b4') \
+                .update(id=1583093350498, questions=2, rewards=1, rewards_h='6b2c38e3a7d1bbca95cd302d03d77c1c0c90085f229f35caa0914d7dcd1b44b4') \
                 .result(storage=storage, sender="tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb")
 
 
@@ -141,8 +151,9 @@ class OracleTest(TestCase):
         solution = "identify gentle hazard impact boy say rotate fame robot hole dog economy"
         storage = {1583093350498: {
             'id': 1583093350498,
+            'questions': 2,
             'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
-            'claimed': 0,
+            'claimed': {},
             'rewards': 10,
             'rewards_h': generate_proof(solution, 11) # rewards_h = HASH^rewards+1(Solution)
         }}
@@ -150,15 +161,16 @@ class OracleTest(TestCase):
         res = self.oracle \
             .solve(id=1583093350498, proof=proof) \
             .result(storage=storage, sender="tz1cmWyycuCBdHVHVCnXbRLdKfjNSesRPJyz")
-        self.assertEqual(1, res.big_map_diff[""][1583093350498]['claimed'])
+        self.assertEqual(1, res.big_map_diff[""][1583093350498]['claimed']['tz1cmWyycuCBdHVHVCnXbRLdKfjNSesRPJyz'])
 
 
     def test_can_only_be_one_1st_solver(self):
         solution = "identify gentle hazard impact boy say rotate fame robot hole dog economy"
         storage = {1583093350498: {
             'id': 1583093350498,
+            'questions': 2,
             'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
-            'claimed': 1,
+            'claimed': { 'tz1irJKkXS2DBWkU1NnmFQx1c1L7pbGg4yhk': 1 },
             'rewards': 10,
             'rewards_h': generate_proof(solution, 11) # rewards_h = HASH^rewards+1(Solution)
         }}
@@ -173,8 +185,9 @@ class OracleTest(TestCase):
         solution = "identify gentle hazard impact boy say rotate fame robot hole dog economy"
         storage = {1583093350498: {
             'id': 1583093350498,
+            'questions': 2,
             'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
-            'claimed': 1,
+            'claimed': { 'tz1irJKkXS2DBWkU1NnmFQx1c1L7pbGg4yhk': 1 },
             'rewards': 10,
             'rewards_h': generate_proof(solution, 11) # rewards_h = HASH^rewards+1(Solution)
         }}
@@ -182,15 +195,16 @@ class OracleTest(TestCase):
         res = self.oracle \
             .solve(id=1583093350498, proof=proof) \
             .result(storage=storage, sender="tz1cmWyycuCBdHVHVCnXbRLdKfjNSesRPJyz")
-        self.assertEqual(2, res.big_map_diff[""][1583093350498]['claimed'])
+        self.assertEqual(2, res.big_map_diff[""][1583093350498]['claimed']['tz1cmWyycuCBdHVHVCnXbRLdKfjNSesRPJyz'])
 
 
     def test_can_only_be_one_2nd_solver(self):
         solution = "identify gentle hazard impact boy say rotate fame robot hole dog economy"
         storage = {1583093350498: {
             'id': 1583093350498,
+            'questions': 2,
             'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
-            'claimed': 2,
+            'claimed': { 'tz1codeYURj5z49HKX9zmLHms2vJN2qDjrtt': 1, 'tz1irJKkXS2DBWkU1NnmFQx1c1L7pbGg4yhk': 2 },
             'rewards': 10,
             'rewards_h': generate_proof(solution, 11) # rewards_h = HASH^rewards+1(Solution)
         }}
@@ -201,12 +215,30 @@ class OracleTest(TestCase):
                 .result(storage=storage, sender="tz1cmWyycuCBdHVHVCnXbRLdKfjNSesRPJyz")
 
 
+    def test_cannot_claim_multiple(self):
+        solution = "identify gentle hazard impact boy say rotate fame robot hole dog economy"
+        storage = {1583093350498: {
+            'id': 1583093350498,
+            'questions': 2,
+            'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
+            'claimed': { 'tz1codeYURj5z49HKX9zmLHms2vJN2qDjrtt': 1 },
+            'rewards': 10,
+            'rewards_h': generate_proof(solution, 11) # rewards_h = HASH^rewards+1(Solution)
+        }}
+        proof = generate_proof(solution, 9)
+        with self.assertRaises(MichelsonRuntimeError):
+            res = self.oracle \
+                .solve(id=1583093350498, proof=proof) \
+                .result(storage=storage, sender="tz1codeYURj5z49HKX9zmLHms2vJN2qDjrtt")
+
+
     def test_cannot_solve_own_puzzle(self):
         solution = "identify gentle hazard impact boy say rotate fame robot hole dog economy"
         storage = {1583093350498: {
             'id': 1583093350498,
+            'questions': 2,
             'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
-            'claimed': 0,
+            'claimed': {},
             'rewards': 10,
             'rewards_h': generate_proof(solution, 11) # rewards_h = HASH^rewards+1(Solution)
         }}
@@ -221,8 +253,13 @@ class OracleTest(TestCase):
         solution = "identify gentle hazard impact boy say rotate fame robot hole dog economy"
         storage = {1583093350498: {
             'id': 1583093350498,
+            'questions': 2,
             'author': 'tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb',
-            'claimed': 10,
+            'claimed': { 'tz1codeYURj5z49HKX9zmLHms2vJN2qDjrtt': 1, 'tz1irJKkXS2DBWkU1NnmFQx1c1L7pbGg4yhk': 2,
+                 'tz1irJKkXS2DBWkU1NnmFQx1c1L7pbGg4yhk': 3, 'tz1irJKkXS2DBWkU1NnmFQx1c1L7pbGg4yhk': 4,
+                 'tz1irJKkXS2DBWkU1NnmFQx1c1L7pbGg4yhk': 5, 'tz1irJKkXS2DBWkU1NnmFQx1c1L7pbGg4yhk': 6,
+                 'tz1irJKkXS2DBWkU1NnmFQx1c1L7pbGg4yhk': 7, 'tz1irJKkXS2DBWkU1NnmFQx1c1L7pbGg4yhk': 8,
+                 'tz1irJKkXS2DBWkU1NnmFQx1c1L7pbGg4yhk': 9, 'tz1irJKkXS2DBWkU1NnmFQx1c1L7pbGg4yhk': 10 },
             'rewards': 10,
             'rewards_h': generate_proof(solution, 11) # rewards_h = HASH^rewards+1(Solution)
         }}
