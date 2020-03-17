@@ -1,5 +1,7 @@
 #include "hasher.ligo"
 
+type claim is map (address, nat)
+
 type puzzle is
   record [
     id          : nat;          // e.g. Creation Time
@@ -7,7 +9,7 @@ type puzzle is
     rewards_h   : bytes;        // Encrypted bytes output of hashing contract (rewards)
     rewards     : nat;          // Max claimable rewards (default 0)
                                 // Suggested max rewards capacity: testnet (10), mainnet (100)
-    claimed     : nat;          // Number of rewards claimed
+    claimed     : claim;          // Number of rewards claimed
     questions   : nat           // Quantity of questions concatenated in the answer hash (for DApp frontend only)
   ]
 
@@ -72,7 +74,7 @@ function create_puzzle (const input : create_params; var puzzles : puzzle_storag
         rewards_h = input.rewards_h;
         rewards   = input.rewards;
         questions = input.questions;
-        claimed   = 0n
+        claimed   = (map [] : claim)
       ];
 
     (* Update puzzle storage *)
@@ -95,13 +97,14 @@ function update_puzzle (const input : create_params; var puzzles : puzzle_storag
     else skip;
 
     (* One caveat; rewards cannot be less than already claimed *)
-    if input.rewards < puzzle_instance.claimed then
+    if input.rewards < Map.size(puzzle_instance.claimed) then
       failwith("Cannot update puzzle");
     else skip;
 
     (* Update puzzle *)
     puzzle_instance.rewards_h := input.rewards_h;
     puzzle_instance.rewards   := input.rewards;
+    puzzle_instance.questions := input.questions;
 
     (* Update puzzle storage *)
     puzzles[puzzle_instance.id] := puzzle_instance;
@@ -123,12 +126,18 @@ function claim_reward (const input : solve_params; var puzzles : puzzle_storage)
     else skip;
 
     (* Current depth in hashchain to verify *)
-    const atdepth : nat = abs(puzzle_instance.rewards - puzzle_instance.claimed);
+    const atdepth : nat = abs(puzzle_instance.rewards - Map.size(puzzle_instance.claimed));
 
     (* Puzzle must have claimable rewards remaining *)
     if atdepth < 1n then
       failwith ("No rewards are claimable.");
     else skip;
+
+    (* Address already claimed *)
+    case puzzle_instance.claimed[Tezos.sender] of
+        Some (claimed) -> failwith ("No rewards are claimable.")
+      | None -> skip
+      end;
 
     (* Verify submitted proof *)
     if verify_proof(input.proof, puzzle_instance.rewards_h, puzzle_instance.rewards + 1n, atdepth) then
@@ -136,7 +145,8 @@ function claim_reward (const input : solve_params; var puzzles : puzzle_storage)
     else failwith("Solution proof could not be verified.");
 
     (* Increase claimed by 1 after distribution *)
-    puzzle_instance.claimed := puzzle_instance.claimed + 1n;
+    const claim_num : nat = Map.size(puzzle_instance.claimed) + 1n;
+    puzzle_instance.claimed[Tezos.sender] := claim_num;
 
     (* Update puzzle storage *)
     puzzles[puzzle_instance.id] := puzzle_instance;
@@ -145,7 +155,7 @@ function claim_reward (const input : solve_params; var puzzles : puzzle_storage)
     const proxy_params : proxy_params =
       record [
         puzzle_id = puzzle_instance.id;
-        claim = puzzle_instance.claimed;
+        claim = claim_num;
         addr = Tezos.sender
       ];
     const proxy_entrypoint : contract (proxy_params) = get_entrypoint(
