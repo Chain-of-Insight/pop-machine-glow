@@ -57,7 +57,7 @@
               <span class="bold">Total rewards: </span>
               <span>{{ puzzle.rewards }}</span><br/>
               <span class="bold">Rewards available: </span>
-              <span>{{ (puzzle.rewards - puzzle.numClaimed) }}</span>
+              <span>{{ (puzzle.rewards - toClaimedNumber(puzzle)) }}</span>
             </div>
             <div class="answers puzzle-entry">
               <span class="bold">Secret answer: </span>
@@ -86,10 +86,11 @@
           <!-- Enter Plain Text Solutions (N Times) -->
           <div v-for="index in solve.questionFields" class="solution raw">
             <label>Answer #{{ index }}</label><br/>
-            <input type="text" placeholder="Secret answer" v-model="solve.solutions.raw[index - 1]" />
+            <input v-if="!solve.result.submittable" type="text" placeholder="Secret answer" v-model="solve.solutions.raw[index - 1]" />
+            <input v-if="solve.result.submittable" type="password" placeholder="Secret answer" v-model="solve.solutions.raw[index - 1]" readonly />
           </div>
           <!-- Submit Solutions -->
-          <div class="crypto-trigger">
+          <div class="crypto-trigger" v-if="!solve.result.submittable">
             <button class="btn-inverse btn-solve" @click="checkSolutions()" v-if="solve.questionFields > 1">Submit Solutions</button>
             <button class="btn-inverse btn-solve" @click="checkSolutions()" v-else>Submit Solution</button>
           </div>
@@ -109,9 +110,15 @@
               </div>
             </div>
             <!-- Try again -->
-            <div class="bg-danger" v-if="!solve.result.submittable">
-              <p v-if="solve.questionFields > 1">Your answers could not be verified.</p>
-              <p v-if="solve.questionFields == 1">You answer could not be verified.</p>
+            <div class="bg-danger" v-if="!solve.result.submittable || errors">
+              <div v-if="!solve.result.submittable">
+                <p v-if="solve.questionFields > 1">Your answers could not be verified.</p>
+                <p v-if="solve.questionFields == 1">You answer could not be verified.</p>
+              </div>
+              <div v-if="errors">
+                <p>Error claiming reward:</p>
+                <p>{{ this.errors }}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -192,7 +199,8 @@ export default {
       READY_TO_SUBMT: "Your reward claim is ready to be submitted to the Tezos network",
       SUBMITTED: "Your reward claim has been submitted to the Tezos network",
       CONFIRMED: "Reward has been transferred to your wallet"
-    }
+    },
+    errors: null
   }),
   mounted: async function () {
     this.puzzleId = this.$route.params.id;
@@ -256,7 +264,7 @@ export default {
       this.solve.started = true;
       console.log(this.solve);
     },
-    resetSolving: function () {
+    resetSolving: async function () {
       this.solve = {
         started: false,
         questionFields: 0,
@@ -269,6 +277,10 @@ export default {
           checked: false
         }
       };
+      // Load puzzle storage
+      await this.getPuzzle();
+      // Open solve panel
+      this.startSolving();
     },
     checkSolutions: function () {
       this.solve.result.submittable = false;
@@ -295,7 +307,6 @@ export default {
     claimReward: async function () {
       // Depth
       let depth = (Number(this.puzzle.rewards) - Number(this.puzzle.numClaimed));
-      //let depth = Number(this.puzzle.numClaimed) + 1;
       console.log('Encryption depth =>', depth);
 
       // Answers
@@ -347,9 +358,24 @@ export default {
 
       }).catch((error) => {
         console.log('ERROR CLAIMING REWARD: =>', error);
+        if (error.hasOwnProperty('message')) {
+          this.errors = error.message;
+        }
         this.loading = false;
       });
 
+    },
+    toClaimedNumber: function (puzzle) {
+      if (!puzzle) {
+        return '';
+      } else if (!puzzle.hasOwnProperty('claimed')) {
+        return '';
+      } else if (puzzle.hasOwnProperty('numClaimed')) {
+        return puzzle.numClaimed;
+      } else {
+        let claimedQuantity = Object.keys(puzzle.claimed).length;
+        return claimedQuantity;
+      }
     }
   }
 };
@@ -403,7 +429,7 @@ export default {
     margin-left: 0.25rem;
     margin-right: 0.5rem;
   }
-  input[type=text] {
+  input[type=text], input[type=password] {
     width: 100%;
     padding: 1rem;
   }
@@ -425,5 +451,6 @@ export default {
   .bg-success, .bg-danger {
     color: #ffffff;
     padding: 2rem;
+    margin-top: 1rem;
   }
 </style>
