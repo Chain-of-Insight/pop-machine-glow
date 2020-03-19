@@ -67,7 +67,7 @@
                   <span class="descr">{{ puzzle.rewards_h }}</span>
                 </div>
                 <div class="to-puzzle puzzle-entry">
-                  <div class="btn btn-success" @click="showAddReward(puzzle.id)">Add XTZ Reward</div>
+                  <div class="btn btn-success" @click="showAddReward(index)">Add XTZ Reward</div>
                   <router-link class="btn btn-primary" :to="'/puzzle/' + puzzle.id">Solve</router-link>
                 </div>
               </div>
@@ -112,7 +112,7 @@
                   name="r_amount" 
                   placeholder="1" 
                   min="0" 
-                  :max="puzzles[this.selectedPuzzle].rewards"
+                  :max="puzzles[this.selectedIndex].rewards"
                   v-model="puzzleReward.claimIndex"
                   @change="isValidRewardDonation()"
                 >
@@ -205,6 +205,7 @@ export default {
     ADD_REWARD: 1,
     currentState: 0,
     selectedPuzzle: null,
+    selectedIndex: null,
     states: [0,1],
     // Operation
     loading: false,
@@ -310,13 +311,15 @@ export default {
       return claimedQuantity;
     },
     showAddReward: function (index) {
-      this.selectedPuzzle = index;
+      this.selectedPuzzle = Number(this.puzzles[index].id);
+      this.selectedIndex = index;
       this.puzzles[index].newReward = 0;
       this.currentState = this.ADD_REWARD;
+      console.log(this.selectedPuzzle);
     },
     addReward: function () {
       console.log("Preparing add rewards...", [this.selectedPuzzle, this.puzzleReward]);
-      if (!this.selectedPuzzle == 'undefined' || !this.puzzleReward.submittable) {
+      if (!this.selectedPuzzle == 'undefined' || this.selectedIndex == 'undefined' || !this.puzzleReward.submittable) {
         return;
       } else {
         this.currentMsgState = 0;
@@ -325,7 +328,7 @@ export default {
         this.loading = true;
         
         // Selected puzzle id
-        this.puzzleReward.id = Number(this.selectedPuzzle) + 1;
+        this.puzzleReward.id = this.selectedPuzzle;
         
         // Contract instance
         const contractAddress = this.contracts.rewards;
@@ -384,9 +387,9 @@ export default {
           && this.selectedPuzzle !== 'undefined'
           && this.puzzleReward.claimIndex
           && !this.puzzleReward.submittable) {
-            if (this.puzzleReward.claimIndex > this.puzzles[this.selectedPuzzle].rewards) {
-              this.errors = "Error: rewards cannot be sent to solvers outside of the rewards range (" + this.puzzles[this.selectedPuzzle].rewards + ").";
-            } else if (this.toClaimedNumber(this.puzzles[this.selectedPuzzle].claimed) > 0) {
+            if (this.puzzleReward.claimIndex > this.puzzles[this.selectedIndex].rewards) {
+              this.errors = "Error: rewards cannot be sent to solvers outside of the rewards range (" + this.puzzles[this.selectedIndex].rewards + ").";
+            } else if (this.toClaimedNumber(this.puzzles[this.selectedIndex].claimed) > 0) {
               this.errors = "Adding prizes is only available for unsolved puzzles.";
             } else {
               this.puzzleReward.submittable = true;
@@ -438,6 +441,7 @@ export default {
     color: #ffffff;
     padding: 2rem;
     margin-top: 1rem;
+    margin-bottom: 1rem;
   }
   .crypto-view {
     text-align: center;
