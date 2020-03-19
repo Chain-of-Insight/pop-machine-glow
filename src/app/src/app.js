@@ -8,7 +8,7 @@ import Home from './components/home/Home';
 import Create from './components/create/Create';
 import List from './components/list/List';
 import View from './components/view/View';
-// import Claim from './components/claim/Claim';
+import MyPuzzles from './components/user/MyPuzzles';
 
 // Routes
 const router = new VueRouter({
@@ -18,8 +18,8 @@ const router = new VueRouter({
     { name: 'home', path: '/', component: Home },
     { name: 'puzzles', path: '/puzzles', component: List },
     { name: 'creator', path: '/puzzle/create', component: Create },
-    { path: '/puzzle/:id', component: View }//,
-    // { path: '/puzzle/claim/:id', component: Claim }
+    { path: '/puzzle/:id', component: View },
+    { path: '/my-puzzles', component: MyPuzzles }
   ]
 });
 

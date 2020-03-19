@@ -57,7 +57,7 @@
               <span class="bold">Total rewards: </span>
               <span>{{ puzzle.rewards }}</span><br/>
               <span class="bold">Rewards available: </span>
-              <span>{{ (puzzle.rewards - puzzle.claimed) }}</span>
+              <span>{{ (puzzle.rewards - toClaimedNumber(puzzle.claimed)) }}</span>
             </div>
             <div class="answers puzzle-entry">
               <span class="bold">Secret answer: </span>
@@ -143,8 +143,8 @@ export default {
 
       // Iterate big_map with natural keys
       let iterating = true;
-      let i = 0;
-      while (iterating && i < 5) {
+      let i = 1;
+      while (iterating) {
         let puzzleEntry = await this.getPuzzle(String(i));
         if (!puzzleEntry) {
           iterating = false;
@@ -171,6 +171,14 @@ export default {
         return false;
       }
 
+    },
+    toClaimedNumber: function (claimedMap) {
+      //console.log('claimedMap =>', claimedMap);
+      if (!claimedMap) {
+        return '';
+      }
+      let claimedQuantity = Object.keys(claimedMap).length;
+      return claimedQuantity;
     }
   }
 };

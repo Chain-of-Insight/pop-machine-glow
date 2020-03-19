@@ -35,6 +35,9 @@
         <li>
           <router-link to="/puzzles">Browse Puzzles</router-link>
         </li>
+        <li>
+          <router-link to="/my-puzzles">My Puzzles</router-link>
+        </li>
       </ul>
       <p v-else>Connect your Tezos wallet to get started</p>
     </div>
@@ -105,7 +108,7 @@ export default {
 
 <style scoped>
   .container {
-    width: 600px;
+    width: 800px;
     margin: 50px auto;
     text-align: center;
   }
@@ -115,7 +118,7 @@ export default {
       padding-left: 0;
   }
   li {
-    width: 30%;
+    width: 20%;
     display: inline-block;
   }
   li, button {

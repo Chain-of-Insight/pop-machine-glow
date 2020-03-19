@@ -39,7 +39,7 @@
     <!-- Content -->
     <div class="container">
 
-      <h1>{{ title }}{{ Number($route.params.id) + 1 }}</h1>
+      <h1>{{ title }}{{ Number($route.params.id) }}</h1>
       
       <div class="container-fluid">
         <!-- Puzzles -->
@@ -48,7 +48,7 @@
           <img class="card-img-top" src="https://via.placeholder.com/25x25" alt="Card image cap">
           -->
           <div class="card-body">
-            <h5 class="card-title">Puzzle: {{ Number(puzzle.id) + 1 }}</h5>
+            <h5 class="card-title">Puzzle: {{ Number(puzzle.id) }}</h5>
             <div class="author puzzle-entry">
               <span class="bold">Author: </span>
               <span class="descr">{{ puzzle.author }}</span>
@@ -57,7 +57,7 @@
               <span class="bold">Total rewards: </span>
               <span>{{ puzzle.rewards }}</span><br/>
               <span class="bold">Rewards available: </span>
-              <span>{{ (puzzle.rewards - puzzle.claimed) }}</span>
+              <span>{{ (puzzle.rewards - toClaimedNumber(puzzle)) }}</span>
             </div>
             <div class="answers puzzle-entry">
               <span class="bold">Secret answer: </span>
@@ -86,10 +86,11 @@
           <!-- Enter Plain Text Solutions (N Times) -->
           <div v-for="index in solve.questionFields" class="solution raw">
             <label>Answer #{{ index }}</label><br/>
-            <input type="text" placeholder="Secret answer" v-model="solve.solutions.raw[index - 1]" />
+            <input v-if="!solve.result.submittable" type="text" placeholder="Secret answer" v-model="solve.solutions.raw[index - 1]" />
+            <input v-if="solve.result.submittable" type="password" placeholder="Secret answer" v-model="solve.solutions.raw[index - 1]" readonly />
           </div>
           <!-- Submit Solutions -->
-          <div class="crypto-trigger">
+          <div class="crypto-trigger" v-if="!solve.result.submittable">
             <button class="btn-inverse btn-solve" @click="checkSolutions()" v-if="solve.questionFields > 1">Submit Solutions</button>
             <button class="btn-inverse btn-solve" @click="checkSolutions()" v-else>Submit Solution</button>
           </div>
@@ -101,17 +102,23 @@
               <p v-if="solve.questionFields > 1">Your answers have been verified locally!</p>
               <p v-if="solve.questionFields == 1">You answer has been verified locally!</p>
               <!-- Claim -->
-              <div class="crypto-trigger" v-if="(puzzle.rewards - puzzle.claimed) > 0">
+              <div class="crypto-trigger" v-if="(puzzle.rewards - puzzle.numClaimed) > 0">
                 <button class="btn-inverse btn-solve" @click="claimReward()">Claim Reward</button>
               </div>
-              <div class="crypto-sorry" v-if="(puzzle.rewards - puzzle.claimed) == 0">
+              <div class="crypto-sorry" v-if="(puzzle.rewards - puzzle.numClaimed) == 0">
                 <p>There are no rewards remaining, better luck next time.</p>
               </div>
             </div>
             <!-- Try again -->
-            <div class="bg-danger" v-if="!solve.result.submittable">
-              <p v-if="solve.questionFields > 1">Your answers could not be verified.</p>
-              <p v-if="solve.questionFields == 1">You answer could not be verified.</p>
+            <div class="bg-danger" v-if="!solve.result.submittable || errors">
+              <div v-if="!solve.result.submittable">
+                <p v-if="solve.questionFields > 1">Your answers could not be verified.</p>
+                <p v-if="solve.questionFields == 1">You answer could not be verified.</p>
+              </div>
+              <div v-if="errors">
+                <p>Error claiming reward:</p>
+                <p>{{ this.errors }}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -184,7 +191,7 @@ export default {
       }
     },
     // Tx. Data
-    explorerPrefix: "https://babylonnet.tzstats.com/",
+    explorerPrefix: "https://better-call.dev/babylon/",
     transactionExplorerLink: null,
     transactionData: null,
     currentMsgState: 0,
@@ -192,7 +199,8 @@ export default {
       READY_TO_SUBMT: "Your reward claim is ready to be submitted to the Tezos network",
       SUBMITTED: "Your reward claim has been submitted to the Tezos network",
       CONFIRMED: "Reward has been transferred to your wallet"
-    }
+    },
+    errors: null
   }),
   mounted: async function () {
     this.puzzleId = this.$route.params.id;
@@ -244,6 +252,7 @@ export default {
       try {
         let bigMapEntry = await this.puzzleStorage.get(this.puzzleId);
         this.puzzle = bigMapEntry;
+        this.puzzle.numClaimed = Object.keys(this.puzzle.claimed).length;
       } catch(e) {
         console.log(e);
       }
@@ -255,7 +264,7 @@ export default {
       this.solve.started = true;
       console.log(this.solve);
     },
-    resetSolving: function () {
+    resetSolving: async function () {
       this.solve = {
         started: false,
         questionFields: 0,
@@ -268,10 +277,15 @@ export default {
           checked: false
         }
       };
+      // Load puzzle storage
+      await this.getPuzzle();
+      // Open solve panel
+      this.startSolving();
     },
     checkSolutions: function () {
       this.solve.result.submittable = false;
       this.solve.result.checked = false;
+      this.solve.result.claimSubmitted = false;
       // Depth
       let depth = Number(this.puzzle.rewards) + 1;
       console.log('Encryption depth =>', depth);
@@ -292,8 +306,7 @@ export default {
     },
     claimReward: async function () {
       // Depth
-      let depth = (Number(this.puzzle.rewards) - Number(this.puzzle.claimed));
-      //let depth = Number(this.puzzle.claimed) + 1;
+      let depth = (Number(this.puzzle.rewards) - Number(this.puzzle.numClaimed));
       console.log('Encryption depth =>', depth);
 
       // Answers
@@ -321,7 +334,7 @@ export default {
         let result = await contract.methods.solve(id, proof).send();
 
         this.currentMsgState = 1; // Tx. Submitted
-        this.solve.result.submitted = true;
+        this.solve.result.claimSubmitted = true;
 
         // Polls every 1 sec. for incoming data
         let timedEvent = setInterval(() => {
@@ -337,7 +350,7 @@ export default {
                   this.transactionExplorerLink = this.explorerPrefix + hash;
                 }
                 this.currentMsgState = 2; // Tx. Confirmed
-                console.log([this.transactionData, this.transactionExplorerLink]);
+                //console.log([this.transactionData, this.transactionExplorerLink]);
               }
             }
           }
@@ -345,9 +358,24 @@ export default {
 
       }).catch((error) => {
         console.log('ERROR CLAIMING REWARD: =>', error);
+        if (error.hasOwnProperty('message')) {
+          this.errors = error.message;
+        }
         this.loading = false;
       });
 
+    },
+    toClaimedNumber: function (puzzle) {
+      if (!puzzle) {
+        return '';
+      } else if (!puzzle.hasOwnProperty('claimed')) {
+        return '';
+      } else if (puzzle.hasOwnProperty('numClaimed')) {
+        return puzzle.numClaimed;
+      } else {
+        let claimedQuantity = Object.keys(puzzle.claimed).length;
+        return claimedQuantity;
+      }
     }
   }
 };
@@ -401,7 +429,7 @@ export default {
     margin-left: 0.25rem;
     margin-right: 0.5rem;
   }
-  input[type=text] {
+  input[type=text], input[type=password] {
     width: 100%;
     padding: 1rem;
   }
@@ -423,5 +451,6 @@ export default {
   .bg-success, .bg-danger {
     color: #ffffff;
     padding: 2rem;
+    margin-top: 1rem;
   }
 </style>
