@@ -311,6 +311,16 @@ export default {
       return claimedQuantity;
     },
     showAddReward: function (index) {
+      // Reset form
+      this.puzzleReward = {
+        id: null,
+        amount: null,
+        claimIndex: null,
+        submittable: false
+      };
+      this.currentMsgState = this.BEFORE_SUBMIT;
+
+      // Set state
       this.selectedPuzzle = Number(this.puzzles[index].id);
       this.selectedIndex = index;
       this.puzzles[index].newReward = 0;
@@ -345,9 +355,9 @@ export default {
 
           let submit = [id, price, claimant];
         
-          //console.log('calling args.', submit);
+          console.log('calling args.', submit);
 
-          let result = await contract.methods.addDeposit(id, claimant).send({amount: price});
+          let result = await contract.methods.addDeposit(claimant, id).send({amount: price});
 
           this.currentMsgState = 1; // Tx. Submitted
 
