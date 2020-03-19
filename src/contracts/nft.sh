@@ -1,8 +1,24 @@
 # Mint NFT
-ligo dry-run nft.ligo --syntax pascaligo --source=tz1WtSgQKTpHUNfXwGFKQtXfphZWkLE2FPCs main \
+ligo dry-run nft.ligo --syntax pascaligo --sender=tz1WtSgQKTpHUNfXwGFKQtXfphZWkLE2FPCs main \
 'Mint(
   record [
-    nftToMintId = 2n;
+    nftToMintId = 0n;
+    nftToMint = record [
+      owner = ("tz1cmWyycuCBdHVHVCnXbRLdKfjNSesRPJyz" : address);
+      data = 0x9690bbd545bd192eb56edd1d8849f7c78ed3b238ee79b749418d20ed1aa6f5b4
+    ];
+  ]
+)' \
+'record [
+  nfts = (map [] : map(nat, record [ owner : address; data : bytes ]));
+  contractOwner = "tz1WtSgQKTpHUNfXwGFKQtXfphZWkLE2FPCs"
+]'
+
+# Mint NFT
+ligo dry-run nft.ligo --syntax pascaligo --sender=tz1WtSgQKTpHUNfXwGFKQtXfphZWkLE2FPCs main \
+'Mint(
+  record [
+    nftToMintId = 0n;
     nftToMint = record [
       owner = ("tz1cmWyycuCBdHVHVCnXbRLdKfjNSesRPJyz" : address);
       data = 0x9690bbd545bd192eb56edd1d8849f7c78ed3b238ee79b749418d20ed1aa6f5b4

@@ -40,16 +40,18 @@ type action is
 // Mints a new NFT by creating a new entry in the contract.
 // @param nftToMintId - ID of the NFT
 // @param nftToMint - The NFT data structure
-function mint(const action : actionMint ; const s : storageType) : (list(operation) * storageType) is
+function mint(const action : actionMint ; var s : storageType) : (list(operation) * storageType) is
   block { 
-    // check permission
+    (* check permission *)
     if Tezos.sender =/= s.contractOwner then
       failwith("You do not have permission to mint assets");
     else skip;
-    // create NFT for new ID
-    const nfts : nfts = s.nfts;
-    nfts[action.nftToMintId] := action.nftToMint;
-    s.nfts := nfts;
+
+    (* Get next ID *)
+    const nextId : nat = Map.size(s.nfts) + 1n;
+
+    (* Create NFT for next ID *)
+    s.nfts[nextId] := action.nftToMint;
    } with ((nil: list(operation)) , s)
 
 // Transfers the ownership of an NFT by replacing the owner address.
