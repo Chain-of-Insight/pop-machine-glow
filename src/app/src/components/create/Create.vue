@@ -126,7 +126,7 @@
                 <a :href="transactionExplorerLink" target="_blank">View transaction in explorer</a>
               </p>
               <p>
-                <router-link to="/puzzles">View Puzzles</router-link>
+                <router-link to="/my-puzzles">View my puzzles</router-link>
               </p>
             </div>
           </div>
@@ -210,7 +210,7 @@ export default {
     },
     puzzleLength: 0,
     // Tx. Data
-    explorerPrefix: "https://babylonnet.tzstats.com/",
+    explorerPrefix: "https://better-call.dev/babylon/",
     transactionExplorerLink: null,
     transactionData: null
   }),
@@ -227,7 +227,7 @@ export default {
       //console.log("User balance =>", this.currentBalance);
     }
     // Load puzzle storage
-    this.loadStorage();
+    await this.loadStorage();
   },
   methods: {
     connectUser: async function () {
@@ -286,7 +286,7 @@ export default {
         console.log('Contract', contract);
         
         // Constructor args.
-        let id = Number(this.puzzleLength) + 1,
+        let id = (this.puzzleLength + 1),
             rewards = Number(this.puzzle.rewardQuantity),
             rewards_h = this.puzzle.solutions.encrypted.slice(2,this.puzzle.solutions.encrypted.length),
             questions = Number(this.puzzle.solutionQuantity);
@@ -313,7 +313,7 @@ export default {
                   this.transactionExplorerLink = this.explorerPrefix + hash;
                 }
                 this.currentMsgState = 2; // Tx. Confirmed
-                console.log([this.transactionData, this.transactionExplorerLink]);
+                //console.log([this.transactionData, this.transactionExplorerLink]);
               }
             }
           }
@@ -334,18 +334,18 @@ export default {
 
       // Iterate big_map with natural keys
       let iterating = true;
-      let i = 0;
-      while (iterating && i < 5) {
+      let i = 1;
+      while (iterating) {
         let puzzleEntry = await this.getPuzzle(String(i));
         if (!puzzleEntry) {
           iterating = false;
           break;
         } else {
-          this.puzzleLength = i;
           ++i;
+          ++this.puzzleLength;
         }
       }
-      console.log('Puzzle Quantity =>', (this.puzzleLength + 1));
+      console.log('Puzzle Quantity =>', this.puzzleLength);
     },
     getPuzzle: async function (bigMapKey) {
       if (!this.puzzleStorage)

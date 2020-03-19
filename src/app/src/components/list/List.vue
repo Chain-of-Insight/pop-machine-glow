@@ -144,7 +144,7 @@ export default {
       // Iterate big_map with natural keys
       let iterating = true;
       let i = 1;
-      while (iterating && i < 5) {
+      while (iterating) {
         let puzzleEntry = await this.getPuzzle(String(i));
         if (!puzzleEntry) {
           iterating = false;
