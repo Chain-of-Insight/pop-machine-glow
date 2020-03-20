@@ -1,11 +1,10 @@
-#!/usr/bin/python
 from PIL import Image
 import numpy as np
 import base64
 import sys
 w, h = 512, 512
 
-print('Argument List:', str(sys.argv))
+#print('Argument List:', str(sys.argv))
 
 Hash=sys.argv
 
@@ -41,12 +40,11 @@ def Generate(inputHash):
     # red patch in upper left
     #print(data)
     img = Image.fromarray(data, 'RGB')
-    img.show()
-    img.save('./assets/img/hashes/'+Hash+'.png')
+    #img.show()
     return "created image"
 
 def GenerateB64(inputHash):
-    print(inputHash)
+    #print(inputHash)
     Hash=inputHash[1]
     Hash=Hash[2:]
 
@@ -57,7 +55,7 @@ def GenerateB64(inputHash):
     temp2=0
 
     TT=int(Hash,16)%3
-    print(TT)
+    #print(TT)
     for x in range(0,loop):
         color=int(Hash[x:x+2],16)
         for y in range(0,loop):
@@ -76,5 +74,6 @@ def GenerateB64(inputHash):
     
     return base64.b64encode(data)
 
-Generate(Hash)
-print(GenerateB64(Hash))
+#Generate(Hash)
+b64Hash = GenerateB64(Hash)
+print(b64Hash)
