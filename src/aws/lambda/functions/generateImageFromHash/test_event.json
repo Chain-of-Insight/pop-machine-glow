@@ -1,0 +1,11 @@
+{
+  "body": "",
+  "path": "/0x5849bdf119a6f69269fd3ca1384cd6486e318ddabdf436e61a9678b0f0cd392d",
+  "httpMethod": "GET",
+  "isBase64Encoded": false,
+  "queryStringParameters": {},
+  "multiValueQueryStringParameters": {},
+  "pathParameters": {
+    "hash": "0x5849bdf119a6f69269fd3ca1384cd6486e318ddabdf436e61a9678b0f0cd392d"
+  }
+}
