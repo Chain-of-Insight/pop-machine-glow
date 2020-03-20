@@ -47,12 +47,10 @@
           <div class="card-body">
             <!-- Puzzle Title -->
             <h5 class="card-title">Puzzle: {{ puzzle.id }}</h5>
-
             <!-- Puzzle Icon -->
             <div class="icon-wrapper">
               <div class="icon-t" :style="'background-image: url(' + imageServer + '0x' + puzzle.rewards_h + ')'"></div>
             </div>
-
             <!-- Puzzle Author -->
             <div class="author puzzle-entry">
               <span class="bold">Author: </span>
@@ -91,6 +89,7 @@
 
         <!-- Solution Wizard -->
         <div class="solve-wizard jumbotron" v-if="!solve.result.claimSubmitted">
+          <span class="close close-x" @click="closeSolver()">&times;</span>
           <!-- Enter Plain Text Solutions (N Times) -->
           <div v-for="index in solve.questionFields" class="solution raw">
             <label>Answer #{{ index }}</label><br/>
@@ -275,7 +274,7 @@ export default {
       this.solve.started = true;
       console.log(this.solve);
     },
-    resetSolving: async function () {
+    resetSolving: async function (hardReset = false) {
       this.solve = {
         started: false,
         questionFields: 0,
@@ -290,8 +289,13 @@ export default {
       };
       // Load puzzle storage
       await this.getPuzzle();
-      // Open solve panel
-      this.startSolving();
+      // Open solve panel as required
+      if (!hardReset)
+        this.startSolving();
+    },
+    closeSolver: function () {
+      const forceHardReset = true;
+      this.resetSolving(forceHardReset);
     },
     checkSolutions: function () {
       this.solve.result.submittable = false;
@@ -463,5 +467,11 @@ export default {
     color: #ffffff;
     padding: 2rem;
     margin-top: 1rem;
+  }
+  .close.close-x {
+    position: relative;
+    cursor: pointer;
+    top: -55px;
+    left: 20px;
   }
 </style>
