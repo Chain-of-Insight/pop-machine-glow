@@ -44,25 +44,30 @@
       <div class="container-fluid">
         <!-- Puzzles -->
         <div class="card puzzle-card" v-for="(puzzle, index) in puzzles">
-          <!--
-          <img class="card-img-top" src="https://via.placeholder.com/25x25" alt="Card image cap">
-          -->
           <div class="card-body">
             <h5 class="card-title">Puzzle: {{ index + 1 }}</h5>
+            <!-- Puzzle Icon -->
+            <div class="icon-wrapper">
+              <div class="icon-t" :style="'background-image: url(' + imageServer + '0x' + puzzle.rewards_h + ')'"></div>
+            </div>
+            <!-- Puzzle Author -->
             <div class="author puzzle-entry">
               <span class="bold">Author: </span>
               <span class="descr">{{ puzzle.author }}</span>
             </div>
+            <!-- Puzzle Rewards -->
             <div class="rewards puzzle-entry">
               <span class="bold">Total rewards: </span>
               <span>{{ puzzle.rewards }}</span><br/>
               <span class="bold">Rewards available: </span>
               <span>{{ (puzzle.rewards - toClaimedNumber(puzzle.claimed)) }}</span>
             </div>
+            <!-- Puzzle Secret Answer -->
             <div class="answers puzzle-entry">
               <span class="bold">Secret answer: </span>
               <span class="descr">{{ puzzle.rewards_h }}</span>
             </div>
+            <!-- Go To Puzzle -->
             <div class="to-puzzle puzzle-entry">
               <router-link class="btn btn-primary" :to="'/puzzle/' + puzzle.id">Solve</router-link>
             </div>
@@ -83,6 +88,8 @@ import {
   contracts
 } from '../../services/tezProvider';
 
+import { imageServer } from '../../services/imageProvider';
+
 export default {
   data: () => ({
     title: "Browse puzzles",
@@ -95,6 +102,7 @@ export default {
     mountProvider: mountProvider,
     getContractInstance: getContractInstance,
     contracts: contracts,
+    imageServer: imageServer,
     contractInstance: null,
     puzzleStorage: null,
     puzzles: []
