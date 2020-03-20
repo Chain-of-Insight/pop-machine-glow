@@ -31,5 +31,7 @@ li.connect {
   background-position:50% 50%;
   background-repeat:no-repeat;
   position: absolute;
+  top: -40px;
+  left: -70px;
   clear: both;
 }
