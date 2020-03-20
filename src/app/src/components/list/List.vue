@@ -45,7 +45,8 @@
         <!-- Puzzles -->
         <div class="card puzzle-card" v-for="(puzzle, index) in puzzles">
           <div class="card-body">
-            <h5 class="card-title">Puzzle: {{ index + 1 }}</h5>
+            <!-- Puzzle Title -->
+            <h5 class="card-title">Puzzle: {{ puzzle.id }}</h5>
             <!-- Puzzle Icon -->
             <div class="icon-wrapper">
               <div class="icon-t" :style="'background-image: url(' + imageServer + '0x' + puzzle.rewards_h + ')'"></div>

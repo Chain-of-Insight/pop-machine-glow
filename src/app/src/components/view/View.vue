@@ -39,30 +39,38 @@
     <!-- Content -->
     <div class="container">
 
-      <h1>{{ title }}{{ Number($route.params.id) }}</h1>
+      <h1>{{ title }}{{ $route.params.id }}</h1>
       
       <div class="container-fluid">
         <!-- Puzzles -->
         <div class="card puzzle-card" v-if="puzzle">
-          <!--
-          <img class="card-img-top" src="https://via.placeholder.com/25x25" alt="Card image cap">
-          -->
           <div class="card-body">
-            <h5 class="card-title">Puzzle: {{ Number(puzzle.id) }}</h5>
+            <!-- Puzzle Title -->
+            <h5 class="card-title">Puzzle: {{ puzzle.id }}</h5>
+
+            <!-- Puzzle Icon -->
+            <div class="icon-wrapper">
+              <div class="icon-t" :style="'background-image: url(' + imageServer + '0x' + puzzle.rewards_h + ')'"></div>
+            </div>
+
+            <!-- Puzzle Author -->
             <div class="author puzzle-entry">
               <span class="bold">Author: </span>
               <span class="descr">{{ puzzle.author }}</span>
             </div>
+            <!-- Puzzle Rewards -->
             <div class="rewards puzzle-entry">
               <span class="bold">Total rewards: </span>
               <span>{{ puzzle.rewards }}</span><br/>
               <span class="bold">Rewards available: </span>
               <span>{{ (puzzle.rewards - toClaimedNumber(puzzle)) }}</span>
             </div>
+            <!-- Puzzle Secret Answer -->
             <div class="answers puzzle-entry">
               <span class="bold">Secret answer: </span>
               <span class="descr">{{ puzzle.rewards_h }}</span>
             </div>
+            <!-- Puzzle - Start Solving / Reset Solution Checker -->
             <div class="to-puzzle puzzle-entry">
               <div 
                 class="btn btn-primary" 
@@ -159,6 +167,8 @@ import {
 
 import { generateProofAsString } from '../../services/hasher';
 
+import { imageServer } from '../../services/imageProvider';
+
 export default {
   data: () => ({
     title: "Puzzle #",
@@ -172,6 +182,7 @@ export default {
     getContractInstance: getContractInstance,
     contracts: contracts,
     generateProofAsString: generateProofAsString,
+    imageServer: imageServer,
     contractInstance: null,
     puzzleStorage: null,
     puzzleId: null,
