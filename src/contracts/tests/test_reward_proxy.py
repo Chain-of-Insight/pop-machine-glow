@@ -10,7 +10,7 @@ class RewardProxyTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.proxy = ContractInterface.create_from(join(dirname(__file__), 'build/reward_proxy.tz'), shell='sandboxnet')
+        cls.proxy = ContractInterface.create_from(join(dirname(__file__), '../build/reward_proxy.tz'), shell='sandboxnet')
         cls.maxDiff = None
 
 
@@ -19,8 +19,8 @@ class RewardProxyTest(TestCase):
             "trustedContracts": [],
             "contractOwner": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
             "contractOracle": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
-            "deposits": {},
-            "callbacks": {}
+            "contractNft": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
+            "deposits": {}
         }
         res = self.proxy \
             .approveContract('KT1JepfBfMSqkQyf9B1ndvURghGsSB8YCLMD') \
@@ -30,8 +30,8 @@ class RewardProxyTest(TestCase):
             "trustedContracts": [ "KT1JepfBfMSqkQyf9B1ndvURghGsSB8YCLMD" ],
             "contractOwner": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
             "contractOracle": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
-            "deposits": {},
-            "callbacks": {}
+            "contractNft": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
+            "deposits": {}
         }
         self.assertDictEqual(expected, res.storage)
 
@@ -41,8 +41,8 @@ class RewardProxyTest(TestCase):
             "trustedContracts": [],
             "contractOwner": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
             "contractOracle": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
-            "deposits": {},
-            "callbacks": {}
+            "contractNft": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
+            "deposits": {}
         }
         with self.assertRaises(MichelsonRuntimeError):
             res = self.proxy \
@@ -54,8 +54,8 @@ class RewardProxyTest(TestCase):
             "trustedContracts": [ "KT1RUT25eGgo9KKWXfLhj1xYjghAY1iZ2don" ],
             "contractOwner": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
             "contractOracle": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
-            "deposits": {},
-            "callbacks": {}
+            "contractNft": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
+            "deposits": {}
         }
         res = self.proxy \
             .approveContract('KT1JepfBfMSqkQyf9B1ndvURghGsSB8YCLMD') \
@@ -65,8 +65,8 @@ class RewardProxyTest(TestCase):
             "trustedContracts": [ "KT1JepfBfMSqkQyf9B1ndvURghGsSB8YCLMD", "KT1RUT25eGgo9KKWXfLhj1xYjghAY1iZ2don" ],
             "contractOwner": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
             "contractOracle": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
-            "deposits": {},
-            "callbacks": {}
+            "contractNft": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
+            "deposits": {}
         }
         self.assertDictEqual(expected, res.storage)
 
@@ -76,8 +76,8 @@ class RewardProxyTest(TestCase):
             "trustedContracts": [ "KT1RUT25eGgo9KKWXfLhj1xYjghAY1iZ2don" ],
             "contractOwner": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
             "contractOracle": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
-            "deposits": {},
-            "callbacks": {}
+            "contractNft": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
+            "deposits": {}
         }
         res = self.proxy \
             .addDeposit(puzzle_id=1583093350498, claim=1) \
@@ -88,8 +88,8 @@ class RewardProxyTest(TestCase):
             "trustedContracts": [ "KT1RUT25eGgo9KKWXfLhj1xYjghAY1iZ2don" ],
             "contractOwner": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
             "contractOracle": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
-            "deposits": {1583093350498: {1: Decimal('0.1')}},
-            "callbacks": {}
+            "contractNft": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
+            "deposits": {1583093350498: {1: Decimal('0.1')}}
         }
         self.assertDictEqual(expected, res.storage)
 
@@ -99,8 +99,8 @@ class RewardProxyTest(TestCase):
             "trustedContracts": [ "KT1RUT25eGgo9KKWXfLhj1xYjghAY1iZ2don" ],
             "contractOwner": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
             "contractOracle": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
-            "deposits": {1583093350498: {1: Decimal('0.1')}},
-            "callbacks": {}
+            "contractNft": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
+            "deposits": {1583093350498: {1: Decimal('0.1')}}
         }
         res = self.proxy \
             .addDeposit(puzzle_id=1583093350498, claim=1) \
@@ -111,8 +111,8 @@ class RewardProxyTest(TestCase):
             "trustedContracts": [ "KT1RUT25eGgo9KKWXfLhj1xYjghAY1iZ2don" ],
             "contractOwner": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
             "contractOracle": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
-            "deposits": {1583093350498: {1: Decimal('0.3')}},
-            "callbacks": {}
+            "contractNft": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
+            "deposits": {1583093350498: {1: Decimal('0.3')}}
         }
         self.assertDictEqual(expected, res.storage)
 
@@ -122,8 +122,8 @@ class RewardProxyTest(TestCase):
             "trustedContracts": [ "KT1RUT25eGgo9KKWXfLhj1xYjghAY1iZ2don" ],
             "contractOwner": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
             "contractOracle": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
-            "deposits": {1583093350498: {1: Decimal('0.1')}},
-            "callbacks": {}
+            "contractNft": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
+            "deposits": {1583093350498: {1: Decimal('0.1')}}
         }
         res = self.proxy \
             .addDeposit(puzzle_id=1583258505553, claim=1) \
@@ -134,11 +134,11 @@ class RewardProxyTest(TestCase):
             "trustedContracts": [ "KT1RUT25eGgo9KKWXfLhj1xYjghAY1iZ2don" ],
             "contractOwner": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
             "contractOracle": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
+            "contractNft": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
             "deposits": {
                 1583093350498: {1: Decimal('0.1')},
                 1583258505553: {1: Decimal('1.5')}
-            },
-            "callbacks": {}
+            }
         }
         self.assertDictEqual(expected, res.storage)
 
@@ -148,8 +148,8 @@ class RewardProxyTest(TestCase):
             "trustedContracts": [ "KT1RUT25eGgo9KKWXfLhj1xYjghAY1iZ2don" ],
             "contractOwner": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
             "contractOracle": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
-            "deposits": {1583093350498: {1: Decimal('0.1')}},
-            "callbacks": {}
+            "contractNft": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
+            "deposits": {1583093350498: {1: Decimal('0.1')}}
         }
         res = self.proxy \
             .addDeposit(puzzle_id=1583093350498, claim=2) \
@@ -160,10 +160,10 @@ class RewardProxyTest(TestCase):
             "trustedContracts": [ "KT1RUT25eGgo9KKWXfLhj1xYjghAY1iZ2don" ],
             "contractOwner": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
             "contractOracle": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
+            "contractNft": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
             "deposits": {
                 1583093350498: {1: Decimal('0.1'), 2: Decimal('0.05')}
-            },
-            "callbacks": {}
+            }
         }
         self.assertDictEqual(expected, res.storage)
 
@@ -173,8 +173,8 @@ class RewardProxyTest(TestCase):
             "trustedContracts": [ "KT1JepfBfMSqkQyf9B1ndvURghGsSB8YCLMD" ],
             "contractOwner": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
             "contractOracle": "KT1RUT25eGgo9KKWXfLhj1xYjghAY1iZ2don",
-            "deposits": {},
-            "callbacks": {}
+            "contractNft": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
+            "deposits": {}
         }
         res = self.proxy \
             .setOracle('KT1JepfBfMSqkQyf9B1ndvURghGsSB8YCLMD') \
@@ -184,8 +184,8 @@ class RewardProxyTest(TestCase):
             "trustedContracts": [ "KT1JepfBfMSqkQyf9B1ndvURghGsSB8YCLMD" ],
             "contractOwner": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
             "contractOracle": "KT1JepfBfMSqkQyf9B1ndvURghGsSB8YCLMD",
-            "deposits": {},
-            "callbacks": {}
+            "contractNft": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
+            "deposits": {}
         }
         self.assertDictEqual(expected, res.storage)
 
@@ -195,8 +195,8 @@ class RewardProxyTest(TestCase):
             "trustedContracts": [ "KT1RUT25eGgo9KKWXfLhj1xYjghAY1iZ2don" ],
             "contractOwner": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
             "contractOracle": "KT1RUT25eGgo9KKWXfLhj1xYjghAY1iZ2don",
-            "deposits": {},
-            "callbacks": {}
+            "contractNft": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
+            "deposits": {}
         }
 
         with self.assertRaises(MichelsonRuntimeError):
@@ -210,8 +210,8 @@ class RewardProxyTest(TestCase):
             "trustedContracts": [ "KT1JepfBfMSqkQyf9B1ndvURghGsSB8YCLMD" ],
             "contractOwner": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
             "contractOracle": "KT1RUT25eGgo9KKWXfLhj1xYjghAY1iZ2don",
-            "deposits": {},
-            "callbacks": {}
+            "contractNft": "tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb",
+            "deposits": {}
         }
         with self.assertRaises(MichelsonRuntimeError):
             res = self.proxy \
