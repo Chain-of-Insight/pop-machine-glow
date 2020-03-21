@@ -48,7 +48,7 @@ The below diagrams detail the _operation_ workflow of our smart contracts. Live 
 
 ## Figure 2.0 - Submitting a solution & claiming a knowledge commitment
 <p align="center">
-  <img width="auto" height="1000px" src="https://github.com/Chain-of-Insight/pop-machine-glow/blob/master/Documentation/assets/img/diagram/Solve_Puzzle_UML.png">
+  <img width="auto" height="900px" src="https://github.com/Chain-of-Insight/pop-machine-glow/blob/master/Documentation/assets/img/diagram/Solve_Puzzle_UML.png">
 </p>
 
 ## Figure 3.0 - Operation workflow from a testnet `grantReward` transaction
