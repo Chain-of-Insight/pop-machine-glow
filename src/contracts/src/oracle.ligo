@@ -9,7 +9,7 @@ type puzzle is
     rewards_h   : bytes;        // Encrypted bytes output of hashing contract (rewards)
     rewards     : nat;          // Max claimable rewards (default 0)
                                 // Suggested max rewards capacity: testnet (10), mainnet (100)
-    claimed     : claim;          // Number of rewards claimed
+    claimed     : claim;        // Number of rewards claimed
     questions   : nat           // Quantity of questions concatenated in the answer hash (for DApp frontend only)
   ]
 
