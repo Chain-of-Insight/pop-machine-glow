@@ -52,10 +52,7 @@ The below diagrams detail the _operation_ workflow of our smart contracts. Live 
 </p>
 
 ## Figure 3.0 - Operation workflow from a testnet `grantReward` transaction
-Source: https://better-call.dev/babylon/opHdSS7rbnksZnwNtb8QbYUHsLR6x3q8roMeGbpygFZRZTBVzZ7
-<p align="center">
-  <img width="auto" height="1000px" src="https://github.com/Chain-of-Insight/pop-machine-glow/blob/master/Documentation/assets/img/diagram/Solve_Puzzle_Output_Example.png">
-</p>
+See: https://better-call.dev/babylon/opHdSS7rbnksZnwNtb8QbYUHsLR6x3q8roMeGbpygFZRZTBVzZ7
 
 # The Basic Gist
 
