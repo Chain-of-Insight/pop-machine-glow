@@ -1,9 +1,5 @@
 # PoP Machine Glow - Tezos Contracts
 
-<p align="center">
-  <img width="250px" height="auto" src="https://raw.githubusercontent.com/Chain-of-Insight/pop-machine-glow/master/Documentation/assets/img/pop_machine.png">
-</p>
-
 ## Dependencies
 
 - **Docker** - used to run a local Tezos node together with the LIGO compiler (If you're on linux, follow the post-installation steps as well)
@@ -14,7 +10,6 @@
 
 **Install the dependencies**
 ```shell
-$ cd src/contracts
 $ npm i
 $ pip3 install -r requirements.txt
 ```
@@ -63,3 +58,8 @@ $ npm run restart-sandbox -- carthage
 |---|---|---|---|
 |alice   |tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb   |edpkvGfYw3LyB1UcCahKQk4rF2tvbMUk8GFiTuMjL75uGXrpvKXhjn   |edsk3QoqBuvdamxouPhin7swCvkQNgq4jP5KZPbwWNnwdZpSpJiEbq   |
 |bob   |tz1aSkwEot3L2kmUvcoxzjMomb9mvBNuzFK6   |edpkurPsQ8eUApnLUJ9ZPDvu98E8VNj4KtJa1aZr16Cr5ow5VHKnz4   |edsk3RFfvaFaxbHx8BMtEW1rKQcPtDML3LXjNqMNLCzC3wLC1bWbAt   |
+
+<br/><br/><br/>
+<p align="center">
+  <img width="250px" height="auto" src="https://raw.githubusercontent.com/Chain-of-Insight/pop-machine-glow/master/Documentation/assets/img/pop_machine.png">
+</p>
