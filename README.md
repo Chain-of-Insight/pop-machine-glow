@@ -9,14 +9,15 @@ Storage of puzzle answers is handled by the Oracle smart contract. This contract
 Example (Ligo / Pascal)
 
 ```
-type Puzzle is
+type puzzle is
   record [
-    id      	  : nat;      // e.g. Creation Time
-    author  	  : address;  // Author address
-    public_h 	  : bytes;    // Encrypted bytes output of hashing contract (public)
-    rewards_h 	  : bytes;    // Encrypted bytes output of hashing contract (rewards)
-    rewards 	  : nat       // Max claimable rewards (default 0)
-                              // Suggested max rewards capacity: testnet (10), mainnet (100)
+    id          : nat;          // e.g. Creation Time
+    author      : address;      // Author address
+    rewards_h   : bytes;        // Encrypted bytes output of hashing contract (rewards)
+    rewards     : nat;          // Max claimable rewards (default 0)
+                                // Suggested max rewards capacity: testnet (10), mainnet (100)
+    claimed     : claim;        // Number of rewards claimed
+    questions   : nat           // Quantity of questions concatenated in the answer hash (for DApp frontend only)
   ]
 ```
 
@@ -25,17 +26,15 @@ Example 2 - creating a new puzzle record:
 ```
 const new_puzzle_record : Puzzle =
   record [
-    id      	= 1583093350498n;
-    author  	= authorAddress;
-    public_h 	= encryptedOutput;
-    rewards_h	= operationOutput;
-    rewards = 3n   // e.g. NFTs locked to First, Second and Third place claimants
+    id      	= 1n;
+    questions	= 10n;		// 10 questions with secret answers embedded in puzzle
+    rewards 	= 3n;           // NFTs locked to First, Second and Third place claimants
+    rewards_h	= hasherOutput;
   ]
 ```
 
 ### See:
 - LIGO Types: https://gitlab.com/ligolang/ligo/blob/dev/src/passes/operators/operators.ml#L35
-- Fi Types: https://learn.fi-code.com/overview/types
 
 # The Basic Gist
 
