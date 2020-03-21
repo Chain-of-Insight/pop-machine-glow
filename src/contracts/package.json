@@ -12,6 +12,13 @@
   "scripts": {
     "test": "pytest tests -v",
     "compile": "./scripts/contracts/compile.sh",
+    "deploy-oracle": "./scripts/contracts/deploy_oracle.sh",
+    "deploy-nft": "./scripts/contracts/deploy_nft.sh",
+    "deploy-reward-proxy": "./scripts/contracts/deploy_reward_proxy.sh",
+    "reward-proxy-approve-contract": "./scripts/contracts/reward_proxy_approve.sh",
+    "reward-proxy-reject-contract": "./scripts/contracts/reward_proxy_reject.sh",
+    "reward-proxy-set-oracle": "./scripts/contracts/reward_proxy_set_oracle.sh",
+    "reward-proxy-set-nft": "./scripts/contracts/reward_proxy_set_nft.sh",
     "clean": "rm -rf ./build",
     "wait-for-sandbox": "node ./scripts/sandbox/waitForNetwork.js",
     "start-sandbox": "./scripts/sandbox/start_sandbox.sh",
@@ -24,6 +31,9 @@
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/Chain-of-Insight/pop-machine-glow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Chain-of-Insight/pop-machine-glow/issues"
   },
   "keywords": [
     "tezos",
