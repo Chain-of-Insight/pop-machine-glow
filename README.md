@@ -27,8 +27,8 @@ Example 2 - creating a new puzzle record:
 const new_puzzle_record : Puzzle =
   record [
     id      	= 1n;
-    questions	= 10n;          // 10 questions with secret answers embedded in puzzle
-    rewards 	= 3n;           // NFTs locked to First, Second and Third place claimants
+    questions	= 10n;           // 10 questions with secret answers embedded in puzzle
+    rewards 	= 3n;            // NFTs locked to First, Second and Third place claimants
     rewards_h	= hasherOutput;
   ]
 ```
@@ -89,7 +89,7 @@ Now that we have our Zero Knowledge protocol for answer verification, we get to 
 3) Author submits create puzzle transaction with their secret answers encrypted. Author pays their own storage.
 
 ## Verification
-1) Puzzle solvers submit their answers to the PoPMG DApp which firsts tests the solution locally using the `blake2b` package. If the solver's answers are passing verification they can make a transaction to the Oracle contract to claim a reward (if applicable).
+1) Puzzle solvers submit their answers to the PoPMG DApp which firsts tests the solution locally using `blake2b`. If the solver's answers pass verification they can make a transaction to the Oracle contract to claim a reward (if rewards remain).
   - Note: rewards are computationally expensive proportionate to claim order
 2) To obtain an NFT or XTZ reward claimants verify their answers with the help of the _Hashing Contract_ _Prover_ to solve a hash puzzle in a specific order and verify or fail the claimant's proof
 	- Since the rewards hash is encrypted with rounds equal to `Rewards Quantity + 1`, the solver calls the `Prover` to generate the hashes of previous rounds
