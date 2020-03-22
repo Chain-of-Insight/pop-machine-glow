@@ -91,7 +91,7 @@ Now that we have our Zero Knowledge protocol for answer verification, we get to 
   - Note: rewards are computationally expensive proportionate to claim order
 2) To obtain an NFT or XTZ reward claimants verify their answers with the help of the _Hashing Contract_ _Prover_ to solve a hash puzzle in a specific order and verify or fail the claimant's proof
 	- Since the rewards hash is encrypted with rounds equal to `Rewards Quantity + 1`, the solver calls the `Prover` to generate the hashes of previous rounds
-	- Lower round rewards are asymptotically more computationally expensive for the _Prover_ as the amount of compoutational work is proportional to the number of previous rounds. If the first claim hash is Rewards hash - 1 round, than claiming rewards is slightly more expensive for subsequent solvers. If the reverse claim order is used, the first place prize becomes the most expensive transaction.
+	- Lower round rewards are asymptotically more computationally expensive for the _Prover_ as the amount of computational work is proportional to the number of previous rounds excepting the initial round which has an expense equal to the unencrypted payload. If the first claim hash is Rewards hash - 1 round, than claiming rewards is slightly more expensive for subsequent solvers. If the reverse claim order is used, the first place prize becomes the most expensive transaction.
 
 
 **For an academic explanation of greater than and less than zero knowledge proofs using hash chains see:**
