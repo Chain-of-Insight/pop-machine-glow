@@ -37,9 +37,11 @@ const new_puzzle_record : Puzzle =
 - https://gitlab.com/ligolang/ligo/blob/dev/src/passes/operators/operators.ml#L35
 
 # Smart Contract Worklow
-The below diagrams detail the _operation_ workflow of our smart contracts. Live examples of our contracts can viewed at the following addresses
+The below diagrams detail the _operation_ workflow of our smart contracts. Live examples of our contracts can viewed at the following addresses (Babylonnet):
 
-- _Oracle Contract_: 
+- _Oracle & Hashing Contracts_: [KT1NN94PSH8rysDBaw8jDSeJKedfLXRSx7KW](https://babylonnet.tzstats.com/KT1NN94PSH8rysDBaw8jDSeJKedfLXRSx7KW)
+- _Rewards Proxy Contract_: [KT1DfXasH5xziaqfmhyzi3cJyP8UmMjtShWQ](https://babylonnet.tzstats.com/KT1DfXasH5xziaqfmhyzi3cJyP8UmMjtShWQ)
+- _NFT Contract_: [KT1KV3Bp5pDH1bw4bEUpMVsWgQFmkDtg3zxi](https://babylonnet.tzstats.com/KT1KV3Bp5pDH1bw4bEUpMVsWgQFmkDtg3zxi)
 
 ## Figure 1.0 - Puzzle creation
 <p align="center">
