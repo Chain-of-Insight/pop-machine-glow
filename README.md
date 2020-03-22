@@ -2,7 +2,7 @@
 
 ### Introducing "proof of puzzle"...All your answers are ~~belong~~ _unknown_ to us
 
-PoP Machine Glow (PoPMG) is a zero knowledge encryption oracle and DApp build on the Tezos network, it provides users and puzzle authors with verifiable proof of passing a test. More specifically, PoPMG verifies a user knows the correct answer to a question without revealing the question or its answers. Since PoPMG proofs are zero knowledge proofs, it's safe to publicly commit them to the Tezos blockchain so that everyone can verify them should the choose to run the proof calculations on their own hardware.
+PoP Machine Glow (PoPMG) is a zero knowledge encryption oracle and DApp built on the Tezos network, it provides users and puzzle authors with verifiable proof of passing a test. More specifically, PoPMG verifies a user knows the correct answer to a question without revealing the question or its answers. Since PoPMG proofs are zero knowledge proofs, it's safe to publicly commit them to the Tezos blockchain so that everyone can verify them should the choose to run the proof calculations on their own hardware.
 
 To begin with, let's take a look at how _puzzles_ are defined in PoPMG. Storage of puzzle answers is handled by the Oracle smart contract. This contract stores the Puzzle ID and its associated answers in a Michelson record type:
 
