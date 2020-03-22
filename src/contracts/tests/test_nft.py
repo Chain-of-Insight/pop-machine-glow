@@ -6,7 +6,7 @@ from decimal import Decimal
 from pytezos import ContractInterface, pytezos, format_timestamp, MichelsonRuntimeError
 
 # testcases
-class RewardProxyTest(TestCase):
+class NftTest(TestCase):
 
     @classmethod
     def setUpClass(cls):
