@@ -281,7 +281,7 @@ export default {
       // Iterate big_map with natural keys
       let iterating = true;
       let i = 1;
-      while (iterating && i < 5) {
+      while (iterating) {
         let puzzleEntry = await this.getPuzzle(String(i));
         if (!puzzleEntry) {
           iterating = false;
@@ -290,8 +290,9 @@ export default {
           // Push puzzle if addresses match
           //console.log(puzzleEntry);
           if (this.address) {
-            if (this.address == puzzleEntry.author)
+            if (this.address == puzzleEntry.author) {
               this.puzzles.push(puzzleEntry);
+            }
           }
           ++i;
         }
