@@ -21,7 +21,7 @@ if [ "$network" == "babylon" ]; then
 fi
 
 if [ "$network" == "carthage" ]; then
-  tezos_client_connection="-A carthage.smartpy.io -S -P 443"
+  tezos_client_connection="-A carthagenet.smartpy.io -S -P 443"
 fi
 
 # replace KT1DfXasH5xziaqfmhyzi3cJyP8UmMjtShWQ with rewardProxyAddress

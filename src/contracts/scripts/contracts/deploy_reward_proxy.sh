@@ -20,7 +20,7 @@ if [ "$network" == "babylon" ]; then
 fi
 
 if [ "$network" == "carthage" ]; then
-  tezos_client_connection="-A carthage.smartpy.io -S -P 443"
+  tezos_client_connection="-A carthagenet.smartpy.io -S -P 443"
 fi
 
 # replace tz1codeYURj5z49HKX9zmLHms2vJN2qDjrtt with owner

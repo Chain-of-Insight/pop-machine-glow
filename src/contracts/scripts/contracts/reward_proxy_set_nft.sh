@@ -21,7 +21,7 @@ if [ "$network" == "babylon" ]; then
 fi
 
 if [ "$network" == "carthage" ]; then
-  tezos_client_connection="-A carthage.smartpy.io -S -P 443"
+  tezos_client_connection="-A carthagenet.smartpy.io -S -P 443"
 fi
 
 params=$(ligo compile-parameter src/reward_proxy.ligo main "SetNft((\"$nft\": address))")
