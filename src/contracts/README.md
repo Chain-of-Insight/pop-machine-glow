@@ -146,14 +146,14 @@ $ npm run reward-proxy-approve-contract -- sandbox popm-proxy1 tz1VSUr8wwNhLAzem
 > Usage: `npm run reward-proxy-set-nft -- <network> <proxy-contract> <contract-owner> <nft-contract>`
 
 ```shell
-$ npm run reward-proxy-approve-set-nft -- sandbox popm-proxy1 tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb KT1X7ZE4woNDXk89kf513gwr44W8MHXDh5KG
+$ npm run reward-proxy-set-nft -- sandbox popm-proxy1 tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb KT1X7ZE4woNDXk89kf513gwr44W8MHXDh5KG
 ```
 
 **Set oracle contract in reward proxy**
 > Usage: `npm run reward-proxy-set-oracle -- <network> <proxy-contract> <contract-owner> <oracle-contract>`
 
 ```shell
-$ npm run reward-proxy-approve-set-oracle -- sandbox popm-proxy1 tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb KT1KbmpQR4njmP4ZaEGegk7G9dUH6e4pCVdS
+$ npm run reward-proxy-set-oracle -- sandbox popm-proxy1 tz1VSUr8wwNhLAzempoch5d6hLRiTh8Cjcjb KT1KbmpQR4njmP4ZaEGegk7G9dUH6e4pCVdS
 ```
 
 <br/><br/><br/>
