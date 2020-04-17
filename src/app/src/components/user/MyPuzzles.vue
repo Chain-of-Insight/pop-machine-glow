@@ -77,7 +77,9 @@
                 <!-- Go To Puzzle -->
                 <div class="to-puzzle puzzle-entry">
                   <div class="btn btn-success" @click="showAddReward(index)">Add XTZ Reward</div>
+                  <!--
                   <router-link class="btn btn-primary" :to="'/puzzle/' + puzzle.id">Solve</router-link>
+                  -->
                 </div>
               </div>
             </div>
