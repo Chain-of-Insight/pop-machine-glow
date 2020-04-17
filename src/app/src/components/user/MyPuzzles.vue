@@ -232,7 +232,7 @@ export default {
     },
     errors: null,
     // Tx. Data
-    explorerPrefix: "https://better-call.dev/babylon/",
+    explorerPrefix: "https://better-call.dev/carthage/",
     transactionExplorerLink: null,
     transactionData: null
   }),
