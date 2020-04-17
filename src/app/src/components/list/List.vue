@@ -110,7 +110,7 @@ export default {
   }),
   mounted: async function () {
     await this.mountProvider();
-    this.network = "Babylonnet";
+    this.network = "Carthagenet";
     console.log('List mounted');
     let returningUser = sessionStorage.getItem('tzAddress');
     if (returningUser) {

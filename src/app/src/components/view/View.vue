@@ -215,7 +215,7 @@ export default {
   mounted: async function () {
     this.puzzleId = this.$route.params.id;
     await this.mountProvider();
-    this.network = "Babylonnet";
+    this.network = "Carthagenet";
     console.log('View single ID mounted', this.puzzleId);
     let returningUser = sessionStorage.getItem('tzAddress');
     if (returningUser) {
