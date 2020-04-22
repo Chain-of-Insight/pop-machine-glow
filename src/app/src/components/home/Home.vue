@@ -8,6 +8,9 @@
           <li class="connect" @click="connectUser()">
             <span class="btn-connect">Connect</span>
           </li>
+          <li class="proof">
+            <router-link to="/verify">Verify Proof</router-link>
+          </li>
         </ul>
       </div>
     </div>
@@ -37,6 +40,9 @@
         </li>
         <li>
           <router-link to="/my-puzzles">My Puzzles</router-link>
+        </li>
+        <li class="proof-l">
+          <router-link to="/verify">Verify Proof</router-link>
         </li>
       </ul>
       <p v-else>Connect your Tezos wallet to get started</p>

@@ -11,7 +11,11 @@ div.navigation {
 }
 li.connect {
   color: #007bff;
-  width: 100px !important;
+  max-width: 100px;
+}
+li.proof {
+  color: #007bff;
+  max-width: 120px;
 }
 .bold {
   font-weight: bold;

@@ -9,7 +9,7 @@ import Create from './components/create/Create';
 import List from './components/list/List';
 import View from './components/view/View';
 import MyPuzzles from './components/user/MyPuzzles';
-
+import Verify from './components/verify/Verify';
 // Routes
 const router = new VueRouter({
   // mode: 'history',
@@ -19,7 +19,9 @@ const router = new VueRouter({
     { name: 'puzzles', path: '/puzzles', component: List },
     { name: 'creator', path: '/puzzle/create', component: Create },
     { path: '/puzzle/:id', component: View },
-    { path: '/my-puzzles', component: MyPuzzles }
+    { path: '/my-puzzles', component: MyPuzzles },
+    { path: '/verify', component: Verify },
+    { path: '/verify/:id', component: Verify }
   ]
 });
 
