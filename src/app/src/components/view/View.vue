@@ -110,7 +110,7 @@
               <p v-if="solve.questionFields == 1">You answer has been verified locally!</p>
               <!-- Claim -->
               <div class="crypto-trigger" v-if="(puzzle.rewards - puzzle.numClaimed) > 0">
-                <button class="btn btn-inverse btn-solve" @click="claimReward()">Claim Reward</button>
+                <button class="btn btn-inverse btn-solve" @click="claimReward()" v-if="!showProofSet">Claim Reward</button>
                 <button class="btn btn-primary btn-solve" @click="showProofChain()" v-if="!showProofSet">View Proof Chain</button>
                 <button class="btn btn-primary btn-solve" @click="showProofChain()" v-if="showProofSet">Hide Proof Chain</button>
               </div>
@@ -512,13 +512,27 @@ export default {
     position: absolute;
   }
   .withproofs {
-    width: 98vw;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    width: 95vw;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
     margin: auto;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8) !important;
     background-color: #333 !important;
+  }
+  .solve-wizard.withproofs {
+    margin-bottom: 1rem;
+  }
+  pre {
+    font-family: Consolas, monospace;
+    max-width: 800px;
+    padding: 2rem;
+    border-radius: 4px;
+    margin: auto;
+    font-size: 15.5px;
+  }
+  pre::selection {
+    background-color: #cc338b;
+    color: #ffffff;
   }
 </style>

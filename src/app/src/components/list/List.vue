@@ -68,9 +68,12 @@
               <span class="bold">Secret answer: </span>
               <span class="descr">{{ puzzle.rewards_h }}</span>
             </div>
-            <!-- Go To Puzzle -->
+            <!-- Actions -->
             <div class="to-puzzle puzzle-entry">
+              <!-- Go To Puzzle -->
               <router-link class="btn btn-primary" :to="'/puzzle/' + puzzle.id">Solve</router-link>
+              <!-- Verify Proof -->
+              <router-link class="btn btn-success verify" :to="'/verify/' + puzzle.id">Verify Proof</router-link>
             </div>
           </div>
         </div>
@@ -221,5 +224,8 @@ export default {
   }
   .to-puzzle {
     text-align: center;
+  }
+  .btn-success.verify {
+    margin-left: 0.25rem;
   }
 </style>

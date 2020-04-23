@@ -44,6 +44,7 @@
       <div class="container-fluid">
         <!-- Verify Proof -->
         <div v-if="selectedPuzzle">
+          <span class="close close-x" @click="closeProver()">&times;</span>
           <div class="create-wizard jumbotron">
             <!-- Selected Puzzle ID -->
             <h5 class="card-title">Puzzle ID: {{ selectedPuzzle }}</h5>
@@ -67,19 +68,19 @@
 
             <!-- Verify Proof -->
             <div class="proof-controls">
-              <button class="btn-primary is-disabled" v-if="!proofIndex || !proof" disabled>Run Prover</div>
-              <button class="btn-success" v-if="proofIndex && proof" @click="verifyProof()">Run Prover</div>
+              <button class="btn-primary is-disabled" v-if="!proofIndex || !proof" disabled>Run Prover</button>
+              <button class="btn-success" v-if="proofIndex && proof" @click="verifyProof()">Run Prover</button>
             </div>
+          </div>
 
-            <!-- Prover Errors -->
-            <div class="danger bg-danger" v-if="errors.hasOwnProperty('msg')">
-              <span class="prover-error" v-if="errors.msg">{{ errors.msg }}</span>
-            </div>
+          <!-- Prover Errors -->
+          <div class="danger bg-danger proof-failed" v-if="errors.hasOwnProperty('msg')">
+            <span class="prover-error" v-if="errors.msg">{{ errors.msg }}</span>
+          </div>
 
-            <!-- Proof Verified -->
-            <div class="success bg-success proof-verified" v-if="proofVerified == true">
-              <span class="verified-proof" v-if="proofVerified">Proof verification successful!</span>
-            </div>
+          <!-- Proof Verified -->
+          <div class="success bg-success proof-verified" v-if="proofVerified == true">
+            <span class="verified-proof" v-if="proofVerified">Proof verification successful!</span>
           </div>
         </div>
         <!-- Puzzles -->
@@ -282,6 +283,16 @@ export default {
         }
       }
     },
+    closeProver: function () {
+      // Reset state
+      this.title = this.titles[0];
+      this.selectedPuzzle = null;
+      this.proof = null;
+      this.proofIndex = null;
+      this.loadedPuzzle = null;
+      this.errors = {};
+      this.proofVerified = null;
+    },
     getPuzzle: async function (bigMapKey) {
       if (!this.puzzleStorage)
         return;
@@ -368,5 +379,14 @@ export default {
   .card.puzzle-card {
     max-width: 600px;
     margin: auto;
+  }
+  div.bg-danger.proof-failed,
+  div.proof-verified {
+    padding: 1rem;
+  }
+  .close-x {
+    cursor: pointer;
+    margin: 1rem;
+    margin-bottom: 0;
   }
 </style>
