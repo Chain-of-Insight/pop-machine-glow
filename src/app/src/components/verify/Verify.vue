@@ -252,7 +252,8 @@ export default {
       }
 
       // Run prover
-      let encryptedProof = this.generateKnowledgeCommitmentVerifier(proof, depth);
+      let size = (Number(this.loadedPuzzle.rewards) + 1);
+      let encryptedProof = this.generateKnowledgeCommitmentVerifier(proof, depth, size);
 
       // Hash comparison
       if (encryptedProof.slice(2, encryptedProof.length) == this.loadedPuzzle.rewards_h) {
