@@ -252,7 +252,8 @@ export default {
       }
 
       // Verify proof
-      if (this.verifyProofHasher(proof, this.loadedPuzzle.rewards_h, Number(this.loadedPuzzle.rewards) + 1, depth)) {
+      let size = (Number(this.loadedPuzzle.rewards) + 1);
+      if (this.verifyProofHasher(proof, this.loadedPuzzle.rewards_h, size, depth)) {
         console.log("Proof verification successful!");
         this.proofVerified = true;
         return true;
