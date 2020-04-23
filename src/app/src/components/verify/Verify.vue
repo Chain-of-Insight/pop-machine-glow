@@ -68,7 +68,17 @@
             <!-- Verify Proof -->
             <div class="proof-controls">
               <button class="btn-primary is-disabled" v-if="!proofIndex || !proof" disabled>Run Prover</div>
-              <button class="btn-success" v-if="proofIndex && proof">Run Prover</div>
+              <button class="btn-success" v-if="proofIndex && proof" @click="verifyProof()">Run Prover</div>
+            </div>
+
+            <!-- Prover Errors -->
+            <div class="danger bg-danger" v-if="errors.hasOwnProperty('msg')">
+              <span class="prover-error" v-if="errors.msg">{{ errors.msg }}</span>
+            </div>
+
+            <!-- Proof Verified -->
+            <div class="success bg-success proof-verified" v-if="proofVerified == true">
+              <span class="verified-proof" v-if="proofVerified">Proof verification successful!</span>
             </div>
           </div>
         </div>
@@ -119,7 +129,7 @@ import {
   contracts
 } from '../../services/tezProvider';
 
-import { generateProofAsString } from '../../services/hasher';
+import { generateKnowledgeCommitmentVerifier } from '../../services/hasher';
 
 import { imageServer } from '../../services/imageProvider';
 
@@ -138,12 +148,14 @@ export default {
     contracts: contracts,
     imageServer: imageServer,
     contractInstance: null,
+    generateKnowledgeCommitmentVerifier: generateKnowledgeCommitmentVerifier,
     puzzleStorage: null,
     puzzles: [],
     selectedPuzzle: null,
     proof: null,
     proofIndex: null,
     loadedPuzzle: null,
+    errors: {},
     proofVerified: null
   }),
   mounted: async function () {
@@ -211,14 +223,20 @@ export default {
       }
       console.log("Loaded Puzzle =>", this.loadedPuzzle);
     },
-    verifyProof: function (proofIndex = null, proof = null) {
-      if (!proofIndex || !proof) {
+    verifyProof: function () {
+      if (!this.proofIndex || !this.proof) {
+        console.warn("Invalid proof, missing required args.")
         return;
       }
-      console.log({proofIndex: proofIndex, proof: proof});
+      const proofIndex = parseInt(this.proofIndex);
+      const proof = String(this.proof);
+      console.log("Running prover with args. =>", {proofIndex: proofIndex, proof: proof});
+      this.prover(proofIndex, proof);
     },
-    _prover: function (depth, proof) {
+    prover: function (depth, proof) {
+      // Reset prover state
       this.errors = {};
+      this.proofVerified = false;
       // Proof or depth or selected puzzle missing
       if (!depth || !proof || !this.loadedPuzzle.rewards_h) {
         this.errors = {msg: "Proof is missing required arguments"};
@@ -234,15 +252,16 @@ export default {
       }
 
       // Run prover
-      let encryptedProof = this.generateProofAsString(proof, depth);
-      console.log('Answers =>', [answers, encryptedProof]);
+      let encryptedProof = this.generateKnowledgeCommitmentVerifier(proof, depth);
 
       // Hash comparison
       if (encryptedProof.slice(2, encryptedProof.length) == this.loadedPuzzle.rewards_h) {
         console.log("Proof verification successful!");
+        this.proofVerified = true;
         return true;
       } else {
         this.errors = {msg: "Proof failed"};
+        console.log(encryptedProof.slice(2, encryptedProof.length));
         return false;
       }
     },
@@ -308,8 +327,10 @@ export default {
   li, button {
     padding: 1rem;
     margin: 1rem;
-    background: aliceblue;
     cursor: pointer;
+  }
+  li, button:not(.btn-success):not(.btn-primary) {
+    background: aliceblue;
   }
   div.puzzle-card {
     text-align: left;

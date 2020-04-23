@@ -19,6 +19,19 @@ const generateProofAsString = function(message, depth) {
     return '0x' + Buffer.from(generateProof(message, depth)).toString('hex');
 };
 
+const verifier = function (proof, depth, size) {
+    depth = Number(depth);
+    for (i = depth; i < size; i++) {
+        proof = hash(proof);
+    }
+    return proof;
+}
+
+const generateKnowledgeCommitmentVerifier = function (proof, depth, size) {
+    return '0x' + Buffer.from(verifier(proof, depth, size)).toString('hex');
+}
+
 module.exports = {
-    generateProofAsString: generateProofAsString
+    generateProofAsString: generateProofAsString,
+    generateKnowledgeCommitmentVerifier: generateKnowledgeCommitmentVerifier
 };
