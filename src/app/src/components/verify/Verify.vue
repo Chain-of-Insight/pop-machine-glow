@@ -129,7 +129,7 @@ import {
   contracts
 } from '../../services/tezProvider';
 
-import { generateKnowledgeCommitmentVerifier } from '../../services/hasher';
+import { verifyProof } from '../../services/hasher';
 
 import { imageServer } from '../../services/imageProvider';
 
@@ -148,7 +148,7 @@ export default {
     contracts: contracts,
     imageServer: imageServer,
     contractInstance: null,
-    generateKnowledgeCommitmentVerifier: generateKnowledgeCommitmentVerifier,
+    verifyProofHasher: verifyProof,
     puzzleStorage: null,
     puzzles: [],
     selectedPuzzle: null,
@@ -251,17 +251,13 @@ export default {
         return false;
       }
 
-      // Run prover
-      let encryptedProof = this.generateKnowledgeCommitmentVerifier(proof, depth);
-
-      // Hash comparison
-      if (encryptedProof.slice(2, encryptedProof.length) == this.loadedPuzzle.rewards_h) {
+      // Verify proof
+      if (this.verifyProofHasher(proof, this.loadedPuzzle.rewards_h, Number(this.loadedPuzzle.rewards) + 1, depth)) {
         console.log("Proof verification successful!");
         this.proofVerified = true;
         return true;
       } else {
         this.errors = {msg: "Proof failed"};
-        console.log(encryptedProof.slice(2, encryptedProof.length));
         return false;
       }
     },
