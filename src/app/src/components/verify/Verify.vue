@@ -67,8 +67,8 @@
 
             <!-- Verify Proof -->
             <div class="proof-controls">
-              <button class="btn-primary is-disabled" v-if="!proofIndex || !proof" disabled>Run prover</div>
-              <button class="btn-success" v-if="proofIndex && proof">Run prover</div>
+              <button class="btn-primary is-disabled" v-if="!proofIndex || !proof" disabled>Run Prover</div>
+              <button class="btn-success" v-if="proofIndex && proof">Run Prover</div>
             </div>
           </div>
         </div>
@@ -100,7 +100,7 @@
             </div>
             <!-- Go To Puzzle -->
             <div class="to-puzzle puzzle-entry">
-              <div class="btn btn-primary" @click="selectPuzzle(puzzle.id, true, index)">Verify proof</div>
+              <div class="btn btn-primary" @click="selectPuzzle(puzzle.id, true, index)">Verify Proof</div>
             </div>
           </div>
         </div>

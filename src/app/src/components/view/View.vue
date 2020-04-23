@@ -103,17 +103,22 @@
           </div>
 
           <!-- Results Display -->
-          <div class="solve-wizard" v-if="solve.result.checked">
+          <div class="solve-wizard" v-if="solve.result.checked" v-bind:class="{withproofs: showProofSet}">
             <!-- Correct Result -->
-            <div class="bg-success" v-if="solve.result.submittable">
+            <div class="bg-success" v-bind:class="{withproofs: showProofSet}" v-if="solve.result.submittable">
               <p v-if="solve.questionFields > 1">Your answers have been verified locally!</p>
               <p v-if="solve.questionFields == 1">You answer has been verified locally!</p>
               <!-- Claim -->
               <div class="crypto-trigger" v-if="(puzzle.rewards - puzzle.numClaimed) > 0">
-                <button class="btn-inverse btn-solve" @click="claimReward()">Claim Reward</button>
+                <button class="btn btn-inverse btn-solve" @click="claimReward()">Claim Reward</button>
+                <button class="btn btn-primary btn-solve" @click="showProofChain()" v-if="!showProofSet">View Proof Chain</button>
+                <button class="btn btn-primary btn-solve" @click="showProofChain()" v-if="showProofSet">Hide Proof Chain</button>
               </div>
               <div class="crypto-sorry" v-if="(puzzle.rewards - puzzle.numClaimed) == 0">
                 <p>There are no rewards remaining, better luck next time.</p>
+              </div>
+              <div class="proof-chain-of-work" v-if="showProofSet && proofSet.length">
+                <pre>{{ proofSet }}</pre>
               </div>
             </div>
             <!-- Try again -->
@@ -200,6 +205,8 @@ export default {
         claimSubmitted: false
       }
     },
+    proofSet: [],
+    showProofSet: false,
     // Tx. Data
     explorerPrefix: "https://better-call.dev/carthage/",
     transactionExplorerLink: null,
@@ -314,6 +321,15 @@ export default {
       if (encryptedAnswers.slice(2, encryptedAnswers.length) == this.puzzle.rewards_h) {
         this.solve.result.submittable = true; // GG!
         this.solve.result.checked = true;
+        // Generate full proof set
+        let proofSet = [answers];
+        for (let i = 1; i < (depth + 1); i++) {
+          // Answers
+          let encryptedAnswers = this.generateProofAsString(answers, i);
+          proofSet.push({depth: i, proof: encryptedAnswers.slice(2, encryptedAnswers.length)});
+        }
+        this.proofSet = proofSet;
+        console.log("Proof Set =>", proofSet);
       } else {
         this.solve.result.checked = true;
       }
@@ -390,6 +406,16 @@ export default {
       } else {
         let claimedQuantity = Object.keys(puzzle.claimed).length;
         return claimedQuantity;
+      }
+    },
+    showProofChain: function () {
+      if (this.proofSet && !this.showProofSet) {
+        // Show proof set
+        this.showProofSet = true;
+        // Scroll to top
+        window.scrollTo(0,0,);
+      } else {
+        this.showProofSet = false;
       }
     }
   }
@@ -473,5 +499,26 @@ export default {
     cursor: pointer;
     top: -55px;
     left: 20px;
+  }
+  .btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+  }
+  pre {
+    background-color: #fff;
+  }
+  .withproofs:not(.bg-success) {
+    position: absolute;
+  }
+  .withproofs {
+    width: 98vw;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8) !important;
+    background-color: #333 !important;
   }
 </style>
