@@ -37,11 +37,17 @@ const new_puzzle_record : Puzzle =
 - https://gitlab.com/ligolang/ligo/blob/dev/src/passes/operators/operators.ml#L35
 
 # Smart Contract Worklow
-The below diagrams detail the _operation_ workflow of our smart contracts. Live examples of our contracts can viewed at the following addresses (Babylonnet):
+The below diagrams detail the _operation_ workflow of our smart contracts. Live examples of our smart contracts can viewed at the following addresses: 
 
+### Babylonnet:
 - _Oracle & Hashing Contracts:_ [KT1NN94PSH8rysDBaw8jDSeJKedfLXRSx7KW](https://babylonnet.tzstats.com/KT1NN94PSH8rysDBaw8jDSeJKedfLXRSx7KW)
 - _Rewards Proxy Contract:_ [KT1DfXasH5xziaqfmhyzi3cJyP8UmMjtShWQ](https://babylonnet.tzstats.com/KT1DfXasH5xziaqfmhyzi3cJyP8UmMjtShWQ)
 - _NFT Contract:_ [KT1KV3Bp5pDH1bw4bEUpMVsWgQFmkDtg3zxi](https://babylonnet.tzstats.com/KT1KV3Bp5pDH1bw4bEUpMVsWgQFmkDtg3zxi)
+
+### Carthagenet:
+- _Oracle & Hashing Contracts:_ [KT1HVZ5KMw7hJM1BPVeoNKfUZprVv6kfsBW3](https://carthagenet.tzstats.com/KT1HVZ5KMw7hJM1BPVeoNKfUZprVv6kfsBW3)
+- _Rewards Proxy Contract:_ [KT1KtB2fNe1V7XWtucvm16nPGvndqAKdkEac](https://carthagenet.tzstats.com/KT1KtB2fNe1V7XWtucvm16nPGvndqAKdkEac)
+- _NFT Contract:_ [KT1Pnh5oiQb3QZHYjdrNDeamgXXNoSigQp6j](https://carthagenet.tzstats.com/KT1Pnh5oiQb3QZHYjdrNDeamgXXNoSigQp6j)
 
 ## Figure 1.0 - Puzzle creation
 <p align="center">
