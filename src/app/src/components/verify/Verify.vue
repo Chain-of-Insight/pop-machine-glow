@@ -382,6 +382,7 @@ export default {
   .card.puzzle-card {
     max-width: 600px;
     margin: auto;
+    margin-bottom: 1rem;
   }
   div.bg-danger.proof-failed,
   div.proof-verified {
