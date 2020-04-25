@@ -12,8 +12,8 @@ import MyPuzzles from './components/user/MyPuzzles';
 import Verify from './components/verify/Verify';
 // Routes
 const router = new VueRouter({
-  // mode: 'history',
-  // base: __dirname,
+  mode: 'history',
+  base: __dirname,
   routes: [
     { name: 'home', path: '/', component: Home },
     { name: 'puzzles', path: '/puzzles', component: List },
