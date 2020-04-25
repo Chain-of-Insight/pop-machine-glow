@@ -323,9 +323,6 @@ export default {
 </script>
 
 <style scoped>
-  .connect-wallet {
-    color: #007bff;
-  }
   .container {
     width: 600px;
     margin: 50px auto;

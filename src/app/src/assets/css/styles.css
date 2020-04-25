@@ -20,6 +20,9 @@ li.proof {
 .bold {
   font-weight: bold;
 }
+.connect-wallet {
+  color: #007bff;
+}
 .puzzle-card:hover, .jumbotron:hover {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8) !important;
 }
