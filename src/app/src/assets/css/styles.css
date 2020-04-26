@@ -42,3 +42,34 @@ li.proof {
   left: -70px;
   clear: both;
 }
+
+@media (max-width:610px)  {
+  ul {
+    text-align: center;
+  }
+  li {
+    width: 100% !important;
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+  .container {
+    width: 100%;
+    max-width: 99vw;
+  }
+  div.footer > img {
+    padding-bottom: 1rem;
+  }
+  .withproofs {
+    width: 100vw !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+  }
+  pre {
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
+  }
+}
